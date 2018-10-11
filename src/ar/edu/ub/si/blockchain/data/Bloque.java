@@ -1,8 +1,10 @@
 package ar.edu.ub.si.blockchain.data;
 
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Objects;
 
 import ar.edu.ub.si.blockchain.interfaces.IOperacionesHash;
 
@@ -14,7 +16,7 @@ public class Bloque implements IOperacionesHash{
 	private String 	hash;
 	private String 	hashDato;
 	private String 	previousHash;
-	private Long 	timeStamp;
+	private Date 	timeStamp;
 	
 	
 	public Bloque( String previousHash , String hashDato) {
@@ -29,8 +31,8 @@ public class Bloque implements IOperacionesHash{
 
 
 	
-	public Long generarTimeStamp() {
-		return new Date().getTime();
+	public Date generarTimeStamp() {
+		return new Date();
 	}
 	
 	//--------------------------------------------------------------//
@@ -41,11 +43,11 @@ public class Bloque implements IOperacionesHash{
 		this.previousHash = previousHash;
 	}
 
-	public Long getTimeStamp() {
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Long timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
@@ -62,15 +64,41 @@ public class Bloque implements IOperacionesHash{
 	public void setHashDato(String hashDato) {
 		this.hashDato = hashDato;
 	}
+	
+	public byte[] longToBytes(long x) { //Transforma el timestamp en un array de bytes para ser hasheado
+	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+	    buffer.putLong(x);
+	    return buffer.array();
+	}
 
 	@Override
 	public void generarHash() {
+		/*
 		String hashcode = Integer.toString(Objects.hash(
 				this.hashCode(),
 				getTimeStamp(),
 				getPreviousHash()));
 		
-		setHash(hashcode);
+		setHash(hashcode);*/
+		
+		MessageDigest m;
+		try {
+			m = MessageDigest.getInstance("MD5");
+			m.update(longToBytes(getTimeStamp().getTime()));
+			m.update(getHashDato().getBytes());
+			byte[] digest = m.digest();
+			StringBuffer sb = new StringBuffer();
+			for (byte b : digest) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			setHash(sb.toString());
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		
+		
 	}
 
 

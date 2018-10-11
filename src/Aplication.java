@@ -19,16 +19,16 @@ public class Aplication {
 			//TENEMOS CUATRO TIPOS DE DATOS QUE QUEREMOS METER A LA BLOCKCHAIN
 			
 			ArrayList<Dato> datos = new ArrayList<Dato>();
-			
-			datos.add(new Dato( new String("Soy un dato")));
-			datos.add(new Dato( new Integer(24)));
-			datos.add(new Dato( new Double (3.4)));
 
-			File fPDF = new File("C:\\EjemploEF1.pdf");
-			File fPDF2 = new File("C:\\EjemploEF1.pdf");
+			File fPDF = new File("C:\\Ejemplo1.pdf");
+			File fPDF2 = new File("C:\\Ejemplo2.pdf");
+			File fPDF3 = new File("C:\\Ejemplo3.pdf");
+			File fPDF4 = new File("C:\\Ejemplo3.pdf");
 			
 			datos.add(new Dato(fPDF));
-			datos.add(new Dato(fPDF2)); //DATO INVALIDO , NO ENTRA EN LA BLOCKCHAIN
+			datos.add(new Dato(fPDF2));
+			datos.add(new Dato(fPDF3));
+			datos.add(new Dato(fPDF4));
 			
 			generarBlockChain(datos);
 			
@@ -88,9 +88,10 @@ public class Aplication {
 	private static void mostrarBlockChain() {
 		
 		for(Bloque bloque: blockchain)
-			System.out.println("Hash Bloque:\t" + bloque.getHash() + "\n" + 
+			System.out.println("\n\n" + "Hash Bloque:\t" + bloque.getHash() + "\n" + 
 							   "Hash Bloque Anterior:\t" + bloque.getPreviousHash()+ "\n" + 
-							   "Hash Dato:\t" + bloque.getHashDato()+ "\n");
+							   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
+							   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");
 		
 	}
 
@@ -112,7 +113,7 @@ public class Aplication {
 				blockchain.add( new Bloque(blockchain.get(blockchain.size()-1).getHash(), dato.getHash()) );
 			}
 		}else {
-			System.out.println("Dato invalido");
+			System.out.println("Dato invalido: el documento ya se encuentra en la blockchain");
 			
 		}
 	}
