@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.vista.AdminScreen;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 import ar.edu.ub.si.blockchain.almacen.AlmacenBDD;
 import ar.edu.ub.si.blockchain.data.Bloque;
@@ -14,9 +16,6 @@ import ar.edu.ub.si.blockchain.data.Dato;
 public class Aplication {
 	
 
-	
-	
-	
 	public static void main(String[] args) {
 		
 		IAdministradorBlockchain admin = new AdministradorBlockchain();
