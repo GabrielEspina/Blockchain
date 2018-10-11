@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ar.edu.ub.si.blockchain.util.Configuracion;
+import ar.edu.ub.si.blockchain.almacen.AlmacenBDD;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 
@@ -15,6 +17,9 @@ public class Aplication {
 	public static ArrayList<Bloque> blockchain = new ArrayList<Bloque>();
 	
 	public static void main(String[] args) {
+		
+			
+			//Configuracion configuracion = new Configuracion("blockchain.properties");
 			
 			//TENEMOS CUATRO TIPOS DE DATOS QUE QUEREMOS METER A LA BLOCKCHAIN
 			
@@ -43,6 +48,8 @@ public class Aplication {
 			almacenarBlockchain();
 
 	}
+	
+	
 	
 	private static void almacenarBlockchain() {
 		
