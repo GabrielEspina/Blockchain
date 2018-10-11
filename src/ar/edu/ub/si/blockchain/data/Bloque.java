@@ -16,7 +16,7 @@ public class Bloque implements IOperacionesHash{
 	private String 	hash;
 	private String 	hashDato;
 	private String 	previousHash;
-	private Long 	timeStamp;
+	private Date 	timeStamp;
 	
 	
 	public Bloque( String previousHash , String hashDato) {
@@ -31,8 +31,8 @@ public class Bloque implements IOperacionesHash{
 
 
 	
-	public Long generarTimeStamp() {
-		return new Date().getTime();
+	public Date generarTimeStamp() {
+		return new Date();
 	}
 	
 	//--------------------------------------------------------------//
@@ -43,11 +43,11 @@ public class Bloque implements IOperacionesHash{
 		this.previousHash = previousHash;
 	}
 
-	public Long getTimeStamp() {
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Long timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 
@@ -65,7 +65,7 @@ public class Bloque implements IOperacionesHash{
 		this.hashDato = hashDato;
 	}
 	
-	public byte[] longToBytes(long x) {
+	public byte[] longToBytes(long x) { //Transforma el timestamp en un array de bytes para ser hasheado
 	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
 	    buffer.putLong(x);
 	    return buffer.array();
@@ -85,7 +85,7 @@ public class Bloque implements IOperacionesHash{
 		try {
 			m = MessageDigest.getInstance("MD5");
 			m.update(getPreviousHash().getBytes());
-			m.update(longToBytes(getTimeStamp()));
+			m.update(longToBytes(getTimeStamp().getTime()));
 			m.update(getHashDato().getBytes());
 			byte[] digest = m.digest();
 			StringBuffer sb = new StringBuffer();

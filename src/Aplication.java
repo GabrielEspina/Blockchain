@@ -88,9 +88,10 @@ public class Aplication {
 	private static void mostrarBlockChain() {
 		
 		for(Bloque bloque: blockchain)
-			System.out.println("Hash Bloque:\t" + bloque.getHash() + "\n" + 
+			System.out.println("\n\n" + "Hash Bloque:\t" + bloque.getHash() + "\n" + 
 							   "Hash Bloque Anterior:\t" + bloque.getPreviousHash()+ "\n" + 
-							   "Hash Dato:\t" + bloque.getHashDato()+ "\n");
+							   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
+							   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");
 		
 	}
 
@@ -112,7 +113,7 @@ public class Aplication {
 				blockchain.add( new Bloque(blockchain.get(blockchain.size()-1).getHash(), dato.getHash()) );
 			}
 		}else {
-			System.out.println("Dato invalido");
+			System.out.println("Dato invalido: el documento ya se encuentra en la blockchain");
 			
 		}
 	}
