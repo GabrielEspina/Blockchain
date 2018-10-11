@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.interfaces.IAlmacenBlockchain;
+import ar.edu.ub.si.blockchain.util.Configuracion;
 
 public class AlmacenProxy implements IAlmacenBlockchain{
 
@@ -21,15 +22,11 @@ public class AlmacenProxy implements IAlmacenBlockchain{
 	
 	
 	@Override
-	public ArrayList<Bloque> getBlockChain() {
-		return getAlmacen().getBlockChain();
+	public ArrayList<Bloque> getBlockChain(Configuracion configuracion) throws Exception {
+		return getAlmacen().getBlockChain(configuracion);
 	}
 
-	@Override
-	public void saveBlockChain(ArrayList<Bloque> blockChain) {
-		getAlmacen().saveBlockChain(blockChain);
-		
-	}
+
 
 	public IAlmacenBlockchain getAdministrador() {
 		return getAlmacen();
@@ -45,6 +42,12 @@ public class AlmacenProxy implements IAlmacenBlockchain{
 
 	private void setAlmacen(IAlmacenBlockchain almacen) {
 		this.almacen = almacen;
+	}
+
+	@Override
+	public void saveBlockChain(Bloque blockChain, Configuracion configuracion) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
