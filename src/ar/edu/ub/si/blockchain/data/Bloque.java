@@ -29,8 +29,16 @@ public class Bloque implements IOperacionesHash{
 	}
 
 
+	public Bloque() {
+		this.setHash(null);
+		this.setHashDato(null);
+		this.setPreviousHash(null);
+		this.setTimeStamp(null);
+	}
 
-	
+
+
+
 	public Date generarTimeStamp() {
 		return new Date();
 	}
