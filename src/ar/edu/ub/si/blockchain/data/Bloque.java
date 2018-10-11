@@ -84,7 +84,6 @@ public class Bloque implements IOperacionesHash{
 		MessageDigest m;
 		try {
 			m = MessageDigest.getInstance("MD5");
-			m.update(getPreviousHash().getBytes());
 			m.update(longToBytes(getTimeStamp().getTime()));
 			m.update(getHashDato().getBytes());
 			byte[] digest = m.digest();
