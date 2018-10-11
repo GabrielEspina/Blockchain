@@ -1,8 +1,10 @@
 package ar.edu.ub.si.blockchain.data;
 
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Objects;
 
 import ar.edu.ub.si.blockchain.interfaces.IOperacionesHash;
 
@@ -62,15 +64,42 @@ public class Bloque implements IOperacionesHash{
 	public void setHashDato(String hashDato) {
 		this.hashDato = hashDato;
 	}
+	
+	public byte[] longToBytes(long x) {
+	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+	    buffer.putLong(x);
+	    return buffer.array();
+	}
 
 	@Override
 	public void generarHash() {
+		/*
 		String hashcode = Integer.toString(Objects.hash(
 				this.hashCode(),
 				getTimeStamp(),
 				getPreviousHash()));
 		
-		setHash(hashcode);
+		setHash(hashcode);*/
+		
+		MessageDigest m;
+		try {
+			m = MessageDigest.getInstance("MD5");
+			m.update(getPreviousHash().getBytes());
+			m.update(longToBytes(getTimeStamp()));
+			m.update(getHashDato().getBytes());
+			byte[] digest = m.digest();
+			StringBuffer sb = new StringBuffer();
+			for (byte b : digest) {
+				sb.append(String.format("%02x", b & 0xff));
+			}
+			setHash(sb.toString());
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		
+		
 	}
 
 
