@@ -1,7 +1,14 @@
 import java.io.File;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import ar.edu.ub.si.blockchain.almacen.AlmacenBDD;
+import ar.edu.ub.si.blockchain.connectordb.AdministradorDeConexiones;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
@@ -52,42 +59,121 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	}
 	
 	@Override
-	public  ArrayList<Bloque> getBlockchain(){
-		return blockchain;
+	public  ArrayList<Bloque> getBlockchain() throws Exception{
+		
+		Configuracion configuracion = new Configuracion("blockchain.properties");
+		// Defino la conexion
+		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
+		
+		String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
+		Statement stmtConsulta = laConexion.createStatement();
+		ResultSet rs = stmtConsulta.executeQuery(laConsulta);
+		
+		//INFORMO QUE SE ESTA POR HACER LA CONSULTA
+		System.out.println(">>SQL: " + laConsulta);
+		
+		// Armo el array de bloques
+		
+		ArrayList<Bloque> bloques = new ArrayList();
+		
+		// muestro los datos
+		
+		while (rs.next()) {
+			// armo el bloque con los datos obtenidos
+			Bloque bl = new Bloque();
+			bl.setHash(rs.getString("Hash"));
+			bl.setHashDato(rs.getString("HashDato"));
+			bl.setPreviousHash(rs.getString("PreviusHash"));
+			bl.setTimeStamp(rs.getDate("TimeStamp"));
+			
+			// agrego el bloque al array
+			bloques.add(bl);
+			
+		}
+		
+		// cierro el statement
+		stmtConsulta.close();
+		
+		return bloques;
 	}
 	
 	@Override
-	public void almacenarBloque() {
+	public void almacenarBloque(Bloque blockChain) throws Exception {
+		
 		Configuracion configuracion = new Configuracion("blockchain.properties");
 		
+		// Defino la conexion
+		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
+		
+		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
+		//ARMAR UN INSERT
+		String laInsercion = "INSERT INTO [Blockchain].[dbo].[Hash] "
+							+"(Hash, HashDato, PreviusHash, TimeStamp)" 
+							+ "VALUES (?,?,?,?)";
+		
+		//Informao la inser
+		System.out.println(">>SQL: " + laInsercion);
+
+		// preparo la insercion
+		PreparedStatement ps = laConexion.prepareStatement(laInsercion, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, blockChain.getHash());
+		ps.setString(2, blockChain.getHashDato());
+		ps.setString(3, blockChain.getPreviousHash());
+		ps.setDate(4, convertUtilToSql(blockChain.getTimeStamp()));
+		
+		ps.execute();
+		
+		ps.close();
+		
+		laConexion.close();
 		
 	}
 
+
+	private java.sql.Date convertUtilToSql(java.util.Date uDate){
+		java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+		return sDate;
+	}
+	
+	private java.util.Date convertUtilToJava(java.sql.Date sDate){
+		java.util.Date jDate = new java.util.Date(sDate.getDate());
+		return jDate;
+	}
+	
 	@Override
-	public void mostrarBlockChain() {
+	public void mostrarBlockChain() throws Exception {
 		
-		for(Bloque bloque: getBlockchain())
-			System.out.println("\n\n" + "Hash Bloque:\t" + bloque.getHash() + "\n" + 
-							   "Hash Bloque Anterior:\t" + bloque.getPreviousHash()+ "\n" + 
-							   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
-							   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");	
+		try {
+			for(Bloque bloque: getBlockchain())
+				System.out.println("\n\n" + "Hash Bloque:\t" + bloque.getHash() + "\n" + 
+								   "Hash Bloque Anterior:\t" + bloque.getPreviousHash()+ "\n" + 
+								   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
+								   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	
 
 
-	private void validarDato(Dato dato) {
+	private void validarDato(Dato dato) throws Exception {
 		
-		if( hashValido(dato) ) {
-			
-			System.out.println("Dato valido");
-			
-			if(getBlockchain().isEmpty()) {
-				getBlockchain().add( new Bloque("0", dato.getHash()) );
+		if( hashValido(dato) )
+			try {
+				{		
+					if(getBlockchain().isEmpty()) {
+						getBlockchain().add( new Bloque("0", dato.getHash()) );
 
-			}else {
-				getBlockchain().add( new Bloque(getBlockchain().get(getBlockchain().size()-1).getHash(), dato.getHash()) );
+					}else {
+						getBlockchain().add( new Bloque(getBlockchain().get(getBlockchain().size()-1).getHash(), dato.getHash()) );
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		}else {
+		else {
 			System.out.println("Dato invalido: el documento ya se encuentra en la blockchain");
 			
 		}
@@ -95,9 +181,14 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	
 	
 	private boolean hashValido( Dato dato ) {
-		for(Bloque bloque: getBlockchain()) 
-			if(bloque.getHashDato().equals(dato.getHash()))
-				return false;
+		try {
+			for(Bloque bloque: getBlockchain()) 
+				if(bloque.getHashDato().equals(dato.getHash()))
+					return false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -128,13 +219,19 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 
 
 	@Override
-	public String validarArchivo(File archivo) {
+	public String validarArchivo(File archivo) throws Exception {
 		crearDato(archivo);
 		
 		if( hashValido(dato) ) {		
 			//System.out.println("Dato valido");
 			if(getBlockchain().isEmpty()) {
 				getBlockchain().add( new Bloque("0", dato.getHash()) );
+				try {
+					almacenarBloque(new Bloque("0", dato.getHash()));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}else {
 				getBlockchain().add( new Bloque(getBlockchain().get(getBlockchain().size()-1).getHash(), dato.getHash()) );
@@ -145,6 +242,9 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 			
 		}
 	}
+
+
+
 	
 	
 
