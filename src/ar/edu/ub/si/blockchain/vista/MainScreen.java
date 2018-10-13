@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.table.TableExample;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
@@ -56,6 +57,10 @@ public class MainScreen extends JFrame
 		menuItem.addActionListener(this::onClickDatabaseDelete);
 		menu.add(menuItem);
 		
+		menuItem = new JMenuItem("See all records");
+		menuItem.addActionListener(this::onClickDatabaseSeeAll);
+		menu.add(menuItem);
+		
 		return menu;
 	}
 
@@ -72,6 +77,20 @@ public class MainScreen extends JFrame
 		return menu;
 	}
 
+	public void onClickDatabaseSeeAll(ActionEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+            
+            public void run() {
+                try {
+					new TableExample();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        });
+	}
+	
 	public void onClickDatabaseDelete (ActionEvent e) {
 		admin.eliminarTodosLosRegistros();
 	}
