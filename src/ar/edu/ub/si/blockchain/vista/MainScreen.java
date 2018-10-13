@@ -92,7 +92,14 @@ public class MainScreen extends JFrame
 	}
 	
 	public void onClickDatabaseDelete (ActionEvent e) {
-		admin.eliminarTodosLosRegistros();
+		try {
+			admin.eliminarTodosLosRegistros();
+			showMessage("Base de datos Truncada!");
+			
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	public void onClickMenuUpload(ActionEvent e) {
 		leerFichero();
