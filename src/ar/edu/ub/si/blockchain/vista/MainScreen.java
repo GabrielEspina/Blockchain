@@ -1,6 +1,7 @@
 package ar.edu.ub.si.blockchain.vista;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,104 +12,113 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
 
 
-public class MainScreen extends JFrame implements ActionListener
+public class MainScreen extends JFrame 
 {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel jPanel;
-	private JLabel texto;
-	private JButton boton;
-	private JFileChooser selectorArchivo;
-	private File archivo;
 	private String ruta;
 	
 	private IAdministradorBlockchain admin;
 	public MainScreen(IAdministradorBlockchain admin) 
 	{
 		setAdmin(admin);
-		addElements();
-		setActionListeners();
-	
-		
+		this.startWindow();
+		this.addElements();
 	}
 
-	private void setActionListeners() 
-	{
-		boton.addActionListener(this);
-		
+	private void startWindow() {
+		this.setLocation(300, 300);
+		this.setSize(100, 100);
+		this.setResizable(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);	
 	}
+
 
 	private void addElements() 
 	{
 		
-		jPanel = new JPanel();
+		JMenuBar menuBar = new JMenuBar();
 		
-		texto = new JLabel();
-		boton = new JButton();
 		
-		selectorArchivo = new JFileChooser();
-		selectorArchivo.setFileSelectionMode(0);
-        FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("PDF", "pdf");
-        selectorArchivo.setFileFilter(extensionFilter);
-        
-        selectorArchivo.setDialogTitle("Abrir Archivo");
-        
-		this.add(jPanel);
-		jPanel.setBackground(Color.white);
-		jPanel.add(texto);
-		jPanel.add(boton);
+		menuBar.add(this.createMenuFile());
+		menuBar.add(this.createMenuBd());
 		
-		boton.setText("Buscar Archivo");
+		this.setJMenuBar(menuBar);
 		
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent aEvent) {
+	private JMenu createMenuBd() {
+		JMenu menu = new JMenu("DataBase");
+		JMenuItem menuItem = new JMenuItem("Delete all records");
+		menuItem.addActionListener(this::onClickDatabaseDelete);
+		menu.add(menuItem);
 		
-		if(aEvent.getSource().equals(boton)) {
-			//JOptionPane.showMessageDialog(null,"BOTON APRETADO");
-			leerFichero();
-		}
+		return menu;
+	}
 
+	private JMenu createMenuFile() {
+		JMenu menu = new JMenu("File");
+		JMenuItem menuItem = new JMenuItem("Upload pdf");
+		menuItem.addActionListener(this::onClickMenuUpload);
+		menu.add(menuItem);
 		
+		menuItem = new JMenuItem("Exit");
+		menuItem.addActionListener(this::onClickMenuExit);
+		menu.add(menuItem);
+		
+		return menu;
+	}
+
+	public void onClickDatabaseDelete (ActionEvent e) {
+		admin.eliminarTodosLosRegistros();
+	}
+	public void onClickMenuUpload(ActionEvent e) {
+		leerFichero();
 	}
 	
-	public void leerFichero() {
+	public void onClickMenuExit(ActionEvent e) {
+		this.dispose();
+	}
+	
 
+	
+	public void leerFichero() {
 		
-        
-        if (selectorArchivo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-        	
-            archivo = selectorArchivo.getSelectedFile();
-            
-            texto.setText(archivo.getName());
-            
-            ruta = selectorArchivo.getSelectedFile().toString();
-            
-            try {
-            
-                if (archivo.exists()) {
-                    System.out.println(ruta);
-                	
-                    getAdmin().crearDato(archivo);
-                    
-                    getAdmin().generarBlockchain();
-                    
-                    getAdmin().mostrarBlockChain();
-                    
-                } else {
-                	
-                    texto.setText("El archivo no existe");
-                    
-                }
+		JFileChooser file = new JFileChooser();
+		file.showOpenDialog(this);
+		File archivo = file.getSelectedFile(); 
+		String texto;
+		
+		
+		try {
+			if(archivo.exists()) {
+				ruta = file.getSelectedFile().toString();
+                System.out.println(ruta);
+                texto = archivo.getName();
+            	
+                //getAdmin().crearDato(archivo);
                 
-            } catch (Exception ex) {
+                //getAdmin().generarBlockchain();
                 
-                System.out.println(ex.getMessage());
+                getAdmin().mostrarBlockChain();
+                
+                showMessage(getAdmin().validarArchivo(archivo));
+                
+              
+			}else {
+                texto = "El archivo no existe"; 
             }
+		}catch (Exception ex) {
+            
+            System.out.println(ex.getMessage());
         }
+
     }
+
+	private void showMessage(String mensaje) {
+		JOptionPane.showMessageDialog(null, mensaje);
+	}
 
 	public IAdministradorBlockchain getAdmin() {
 		return admin;
