@@ -195,31 +195,21 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		this.datos = datos;
 	}
 
-
 	public Dato getDato() {
 		return dato;
 	}
-
-
 	public void setDato(Dato dato) {
 		this.dato = dato;
 	}
-
-
 	@Override
 	public void eliminarTodosLosRegistros() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
-
-
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
 		
 		crearDato(archivo);
 		this.setBlockchainLocal(getBlockchain());
-		
-		
 		if( hashValido(dato) ) {		
 			if(getBlockchainLocal().isEmpty()) {
 					almacenarBloque(new Bloque("0", dato.getHash()));
@@ -232,15 +222,10 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 			
 		}
 	}
-
-
 	public ArrayList<Bloque> getBlockchainLocal() {
 		return blockchainLocal;
 	}
-
-
 	public void setBlockchainLocal(ArrayList<Bloque> blockchainLocal) {
 		this.blockchainLocal = blockchainLocal;
 	}
-
 }
