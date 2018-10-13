@@ -21,7 +21,7 @@ public interface IAdministradorBlockchain {
 	
 	public void mostrarBlockChain() throws SQLException,Exception;
 
-	public void eliminarTodosLosRegistros();
+	public void eliminarTodosLosRegistros() throws SQLException, Exception;
 
 	public String validarArchivo(File archivo) throws SQLException,Exception;
 
