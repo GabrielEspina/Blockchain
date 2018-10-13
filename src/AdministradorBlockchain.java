@@ -202,8 +202,26 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		this.dato = dato;
 	}
 	@Override
-	public void eliminarTodosLosRegistros() {
-		// TODO Auto-generated method stub		
+	public void eliminarTodosLosRegistros() throws Exception {
+		
+		
+		Configuracion configuracion = new Configuracion("blockchain.properties");
+		
+		// Defino la conexion
+		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
+		
+		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
+		//ARMAR UN INSERT
+		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]";
+		
+		//Informao la inser
+		System.out.println(">>SQL: " + elTruncate);
+
+		// preparo la insercion
+		PreparedStatement stmt = laConexion.prepareStatement(elTruncate);
+		stmt.execute();
+		stmt.close();
+		laConexion.close();	
 	}
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
