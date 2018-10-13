@@ -16,8 +16,13 @@ public interface IAdministradorBlockchain {
 	
 	public  ArrayList<Bloque> getBlockchain();
 	
-	public void almacenarBlockchain();
+	public void almacenarBloque();
 	
 	public void mostrarBlockChain();
+
+	public void eliminarTodosLosRegistros();
+
+	public String validarArchivo(File archivo);
+
 	
 }
