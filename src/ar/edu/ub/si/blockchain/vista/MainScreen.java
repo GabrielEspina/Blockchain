@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
 public class MainScreen extends JFrame 
@@ -18,6 +19,7 @@ public class MainScreen extends JFrame
 	private static final long serialVersionUID = 1L;
 	
 	private String ruta;
+	private Configuracion configuracion;
 	
 	private IAdministradorBlockchain admin;
 	public MainScreen(IAdministradorBlockchain admin) 
@@ -126,6 +128,14 @@ public class MainScreen extends JFrame
 
 	public void setAdmin(IAdministradorBlockchain admin) {
 		this.admin = admin;
+	}
+
+	public Configuracion getConfiguracion() {
+		return configuracion;
+	}
+
+	public void setConfiguracion(Configuracion configuracion) {
+		this.configuracion = configuracion;
 	}
 
 }

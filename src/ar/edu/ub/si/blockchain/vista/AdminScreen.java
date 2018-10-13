@@ -4,6 +4,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.util.Configuracion;
 
 public class AdminScreen {
 	
@@ -46,7 +47,7 @@ public class AdminScreen {
 
 	private static void configScreen() {
 		pantallaPrincipal.setVisible(true);
-		pantallaPrincipal.setBounds(200, 200, 400, 250);
+		//pantallaPrincipal.setBounds(200, 200, 400, 250);
 	}
 
 }

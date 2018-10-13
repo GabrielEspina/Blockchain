@@ -20,7 +20,8 @@ public class Aplication {
 		
 		IAdministradorBlockchain admin = new AdministradorBlockchain();
 		
-		AdminScreen.generateScreen( admin );
+		
+		AdminScreen.generateScreen( admin);
 		
 		
 		/*	

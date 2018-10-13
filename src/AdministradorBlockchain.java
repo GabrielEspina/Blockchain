@@ -1,8 +1,12 @@
 import java.io.File;
 import java.util.ArrayList;
+
+import ar.edu.ub.si.blockchain.almacen.AlmacenBDD;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.interfaces.IAlmacenBlockchain;
+import ar.edu.ub.si.blockchain.util.Configuracion;
 
 	
 
@@ -14,8 +18,6 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	
 	//ESTE OBJETO ES TEMPORAL;
 	private Dato dato;
-	
-	
 	
 	public AdministradorBlockchain() {
 		
@@ -55,47 +57,10 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	}
 	
 	@Override
-	public void almacenarBlockchain() {
+	public void almacenarBloque() {
+		Configuracion configuracion = new Configuracion("blockchain.properties");
 		
-		//CALCULO QUE ACA BA LO DE LA BASE DE DATOS
 		
-		 /*String ruta = "registro.txt";
-	        File archivo = new File(ruta);
-	        BufferedWriter bw = null;
-	        if(archivo.exists()) {
-	            try {
-					bw = new BufferedWriter(new FileWriter(archivo));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	            try {
-					bw.write("El fichero de texto ya estaba creado.");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        } else {
-	            try {
-					bw = new BufferedWriter(new FileWriter(archivo));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	            try {
-					bw.write("Acabo de crear el fichero de texto.");
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        }
-	        try {
-				bw.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		*/
 	}
 
 	@Override
