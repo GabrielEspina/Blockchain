@@ -154,6 +154,13 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	public void setDato(Dato dato) {
 		this.dato = dato;
 	}
+
+
+	@Override
+	public void eliminarTodosLosRegistros() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 
