@@ -22,6 +22,7 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	//CREAMOS LA BLOCKCHAIN	
 	private  ArrayList<Bloque> blockchain;
 	private  ArrayList<Dato> datos;
+	private  ArrayList<Bloque> blockchainLocal;
 	
 	//ESTE OBJETO ES TEMPORAL;
 	private Dato dato;
@@ -34,12 +35,8 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	
 	
 	@Override
-	public void crearDato(File archivo) {
-		
-		//getDatos().add(new Dato(arhivo));
-		
-		setDato(new Dato(archivo));
-		
+	public void crearDato(File archivo) {	
+		setDato(new Dato(archivo));	
 	}
 
 	@Override
@@ -51,11 +48,11 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	@Override
 	public void generarBlockchain() {
 		
-		/*for(Dato dato: getDatos())
-			validarDato(dato);
-		*/
-		
-		validarDato(getDato());
+		try {
+			validarDato(getDato());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -85,6 +82,7 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 			bl.setHashDato(rs.getString("HashDato"));
 			bl.setPreviousHash(rs.getString("PreviusHash"));
 			bl.setTimeStamp(rs.getDate("TimeStamp"));
+			//bl.setTimeStamp(convertUtilToJava(rs.getDate("TimeStamp")));
 			
 			// agrego el bloque al array
 			bloques.add(bl);
@@ -150,7 +148,6 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 								   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
 								   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
@@ -170,7 +167,6 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		else {
@@ -178,15 +174,14 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 			
 		}
 	}
-	
-	
+
 	private boolean hashValido( Dato dato ) {
+		
 		try {
-			for(Bloque bloque: getBlockchain()) 
+			for(Bloque bloque: getBlockchainLocal()) 
 				if(bloque.getHashDato().equals(dato.getHash()))
 					return false;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
@@ -220,21 +215,16 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
+		
 		crearDato(archivo);
+		this.setBlockchainLocal(getBlockchain());
+		
 		
 		if( hashValido(dato) ) {		
-			//System.out.println("Dato valido");
-			if(getBlockchain().isEmpty()) {
-				getBlockchain().add( new Bloque("0", dato.getHash()) );
-				try {
+			if(getBlockchainLocal().isEmpty()) {
 					almacenarBloque(new Bloque("0", dato.getHash()));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 			}else {
-				getBlockchain().add( new Bloque(getBlockchain().get(getBlockchain().size()-1).getHash(), dato.getHash()) );
+				      almacenarBloque(new Bloque(getBlockchainLocal().get(getBlockchainLocal().size()-1).getHash(), dato.getHash()) );
 			}
 			return "Pdf Valido!";
 		}else {
@@ -244,8 +234,13 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	}
 
 
+	public ArrayList<Bloque> getBlockchainLocal() {
+		return blockchainLocal;
+	}
 
-	
-	
+
+	public void setBlockchainLocal(ArrayList<Bloque> blockchainLocal) {
+		this.blockchainLocal = blockchainLocal;
+	}
 
 }
