@@ -97,17 +97,17 @@ public class MainScreen extends JFrame
                 System.out.println(ruta);
                 texto = archivo.getName();
             	
-                getAdmin().crearDato(archivo);
+                //getAdmin().crearDato(archivo);
                 
-                getAdmin().generarBlockchain();
+                //getAdmin().generarBlockchain();
                 
                 getAdmin().mostrarBlockChain();
                 
+                showMessage(getAdmin().validarArchivo(archivo));
                 
+              
 			}else {
-            	
-                texto = "El archivo no existe";
-                
+                texto = "El archivo no existe"; 
             }
 		}catch (Exception ex) {
             
@@ -115,6 +115,10 @@ public class MainScreen extends JFrame
         }
 
     }
+
+	private void showMessage(String mensaje) {
+		JOptionPane.showMessageDialog(null, mensaje);
+	}
 
 	public IAdministradorBlockchain getAdmin() {
 		return admin;

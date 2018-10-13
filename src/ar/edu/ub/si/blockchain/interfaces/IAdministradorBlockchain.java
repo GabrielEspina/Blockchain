@@ -21,5 +21,8 @@ public interface IAdministradorBlockchain {
 	public void mostrarBlockChain();
 
 	public void eliminarTodosLosRegistros();
+
+	public String validarArchivo(File archivo);
+
 	
 }
