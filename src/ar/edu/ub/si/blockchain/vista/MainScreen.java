@@ -31,7 +31,7 @@ public class MainScreen extends JFrame
 
 	private void startWindow() {
 		this.setLocation(300, 300);
-		this.setSize(100, 100);
+		this.setSize(500, 100);
 		this.setResizable(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);	
 	}
@@ -98,16 +98,8 @@ public class MainScreen extends JFrame
 				ruta = file.getSelectedFile().toString();
                 System.out.println(ruta);
                 texto = archivo.getName();
-            	
-                //getAdmin().crearDato(archivo);
-                
-                //getAdmin().generarBlockchain();
-                
-                getAdmin().mostrarBlockChain();
-                
                 showMessage(getAdmin().validarArchivo(archivo));
                 
-              
 			}else {
                 texto = "El archivo no existe"; 
             }
