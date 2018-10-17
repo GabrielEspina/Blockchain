@@ -1,14 +1,9 @@
 package ar.edu.ub.si.blockchain.data;
 
 
-import java.nio.ByteBuffer;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
-import ar.edu.ub.si.blockchain.interfaces.IOperacionesHash;
-
-public class Bloque implements IOperacionesHash{
+public class Bloque{
 	
 	//El contenido de un bloque debe tener 
 	//le hash del bloque anterior y la transaccion a hashear
@@ -17,6 +12,7 @@ public class Bloque implements IOperacionesHash{
 	private String 	hashDato;
 	private String 	previousHash;
 	private Date 	timeStamp;
+	private Encriptador encriptador;
 	
 	
 	public Bloque( String previousHash , String hashDato) {
@@ -34,6 +30,7 @@ public class Bloque implements IOperacionesHash{
 		this.setHashDato(null);
 		this.setPreviousHash(null);
 		this.setTimeStamp(null);
+		this.encriptador = new Encriptador();
 	}
 
 
@@ -73,44 +70,11 @@ public class Bloque implements IOperacionesHash{
 		this.hashDato = hashDato;
 	}
 	
-	public byte[] longToBytes(long x) { //Transforma el timestamp en un array de bytes para ser hasheado
-	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-	    buffer.putLong(x);
-	    return buffer.array();
-	}
-
-	@Override
 	public void generarHash() {
-		/*
-		String hashcode = Integer.toString(Objects.hash(
-				this.hashCode(),
-				getTimeStamp(),
-				getPreviousHash()));
-		
-		setHash(hashcode);*/
-		
-		MessageDigest m;
-		try {
-			m = MessageDigest.getInstance("MD5");
-			m.update(longToBytes(getTimeStamp().getTime()));
-			m.update(getHashDato().getBytes());
-			byte[] digest = m.digest();
-			StringBuffer sb = new StringBuffer();
-			for (byte b : digest) {
-				sb.append(String.format("%02x", b & 0xff));
-			}
-			setHash(sb.toString());
-			
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-
-		
-		
+		setHash(encriptador.encriptarBloque(this.getTimeStamp(), this.getHashDato()));
 	}
 
 
-	@Override
 	public String getHash() {
 		return hash;
 	}
