@@ -11,7 +11,12 @@ public class Aplication {
 		
 		IAdministradorBlockchain admin = new AdministradorBlockchain();
 		
+<<<<<<< HEAD
+		
+		AdminScreen.generateScreen( admin);
+=======
 		//levantar un archivo conf para los properties
+>>>>>>> master
 		
 		AdminScreen.generateScreen( admin );
 		
