@@ -4,7 +4,6 @@ import ar.edu.ub.si.blockchain.util.*;
 import java.util.ArrayList;
 
 import ar.edu.ub.si.blockchain.data.Bloque;
-import ar.edu.ub.si.blockchain.data.Dato;
 
 public interface IAlmacenBlockchain {
 	

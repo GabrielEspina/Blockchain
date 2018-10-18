@@ -29,7 +29,7 @@ public class AlmacenBDD implements IAlmacenBlockchain{
 		
 		// Armo el array de bloques
 		
-		ArrayList<Bloque> bloques = new ArrayList();
+		ArrayList<Bloque> bloques = new ArrayList<Bloque>();
 		
 		// muestro los datos
 		
