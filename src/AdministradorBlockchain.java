@@ -1,18 +1,13 @@
 import java.io.File;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import ar.edu.ub.si.blockchain.almacen.AlmacenBDD;
 import ar.edu.ub.si.blockchain.connectordb.AdministradorDeConexiones;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
-import ar.edu.ub.si.blockchain.interfaces.IAlmacenBlockchain;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
 	
@@ -71,16 +66,16 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		
 		// Armo el array de bloques
 		
-		ArrayList<Bloque> bloques = new ArrayList();
+		ArrayList<Bloque> bloques = new ArrayList<Bloque>();
 		
 		// muestro los datos
 		
 		while (rs.next()) {
 			// armo el bloque con los datos obtenidos
 			Bloque bl = new Bloque();
-			bl.setHash(rs.getString("Hash"));
-			bl.setHashDato(rs.getString("HashDato"));
-			bl.setPreviousHash(rs.getString("PreviusHash"));
+			bl.setHash(rs.getString("Hash").trim());
+			bl.setHashDato(rs.getString("HashDato").trim());
+			bl.setPreviousHash(rs.getString("PreviusHash").trim());
 			bl.setTimeStamp(rs.getDate("TimeStamp"));
 			//bl.setTimeStamp(convertUtilToJava(rs.getDate("TimeStamp")));
 			
@@ -178,10 +173,16 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	private boolean hashValido( Dato dato ) {
 		
 		try {
-			for(Bloque bloque: getBlockchainLocal()) 
+			System.out.println("Validando dato...");
+			for(Bloque bloque: getBlockchainLocal()) {
+				System.out.println("dato viejo: " + bloque.getHashDato().length());
 				if(bloque.getHashDato().equals(dato.getHash()))
 					return false;
+			}
+				
+				
 		} catch (Exception e) {
+			System.out.println("error");
 			e.printStackTrace();
 		}
 		return true;

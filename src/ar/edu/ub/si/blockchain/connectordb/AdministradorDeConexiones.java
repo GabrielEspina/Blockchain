@@ -13,6 +13,7 @@ public abstract class AdministradorDeConexiones {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Connection obtenerConexion(Configuracion configuracion) throws Exception {
 		
 		
