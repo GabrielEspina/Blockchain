@@ -17,17 +17,13 @@ public class AdministradorBlockchain extends Administrador {
 	//CREAMOS LA BLOCKCHAIN	
 	private  ArrayList<Bloque> blockchainLocal;
 	
-	//ESTE OBJETO ES TEMPORAL;
+
 	private Dato dato;
 	private String rootHash;
 	
 	public AdministradorBlockchain(String configuration) {
 		super(configuration);
-		
-		
-		
 	}
-	
 	
 	@Override
 	public void crearDato(File archivo) {	
@@ -49,13 +45,9 @@ public class AdministradorBlockchain extends Administrador {
 	public  ArrayList<Bloque> getBlockchain() throws Exception{
 		// Defino la conexion
 		
-		
 		String consulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
 		Statement stmtConsulta = connection().createStatement();
 		ResultSet rs = stmtConsulta.executeQuery(consulta);
-		
-		//INFORMO QUE SE ESTA POR HACER LA CONSULTA
-		System.out.println(">>SQL: " + consulta);
 		
 		// Armo el array de bloques
 		
@@ -69,9 +61,8 @@ public class AdministradorBlockchain extends Administrador {
 			bl.setHash(rs.getString("Hash").trim());
 			bl.setHashDato(rs.getString("HashDato").trim());
 			bl.setPreviousHash(rs.getString("PreviusHash").trim());
-			
-			//bl.setTimeStamp(rs.getDate("TimeStamp"));
-			//bl.setTimeStamp(convertUtilToJava(rs.getDate("TimeStamp")));
+			bl.setTimeStampStr(rs.getString("TimeStamp"));
+
 			
 			// agrego el bloque al array
 			bloques.add(bl);
@@ -87,24 +78,16 @@ public class AdministradorBlockchain extends Administrador {
 	@Override
 	public void almacenarBloque(Bloque blockChain) throws Exception {
 		
-		
-		
-		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
 		String insercion = "INSERT INTO [Blockchain].[dbo].[Hash] "
 							+"(Hash, HashDato, PreviusHash, TimeStamp)" 
 							+ "VALUES (?,?,?,?)";
-		
-		//Informao la inser
-		System.out.println(">>SQL: " + insercion);
-
 		// preparo la insercion
 		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, blockChain.getHash());
 		ps.setString(2, blockChain.getHashDato());
 		ps.setString(3, blockChain.getPreviousHash());
-		ps.setString(4, blockChain.getTimeStamp().toString());
-		//ps.setDate(4, convertUtilToSql(blockChain.getTimeStamp()));
+		ps.setString(4, blockChain.getTimeStampStr());
 		
 		ps.execute();
 		
@@ -112,30 +95,6 @@ public class AdministradorBlockchain extends Administrador {
 		
 		
 	}
-
-
-	private java.sql.Date convertUtilToSql(java.util.Date uDate){
-		java.sql.Date sDate = new java.sql.Date(uDate.getTime());
-		return sDate;
-	}
-	
-
-	
-	@Override
-	public void mostrarBlockChain() throws Exception {
-		
-		try {
-			for(Bloque bloque: getBlockchain())
-				System.out.println("\n\n" + "Hash Bloque:\t" + bloque.getHash() + "\n" + 
-								   "Hash Bloque Anterior:\t" + bloque.getPreviousHash()+ "\n" + 
-								   "Hash Dato:\t" + bloque.getHashDato()+ "\n" +
-								   "Time stamp:\t" + bloque.getTimeStamp().toString() + "\n" + "\n");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-	}
-	
-
 
 
 	private void validarDato(Dato dato) throws Exception {
@@ -162,20 +121,16 @@ public class AdministradorBlockchain extends Administrador {
 	private boolean hashValido( Dato dato ) {
 		
 		try {
-			System.out.println("Validando dato...");
 			for(Bloque bloque: getBlockchainLocal()) {
-				System.out.println("dato viejo: " + bloque.getHashDato().length());
 				if(bloque.getHashDato().equals(dato.getHash()))
 					return false;
 			}
-				
-				
 		} catch (Exception e) {
-			System.out.println("error");
 			e.printStackTrace();
 		}
 		return true;
 	}
+	
 
 	public void insertarUltimoHashRoot() throws Exception {
 		
@@ -184,9 +139,7 @@ public class AdministradorBlockchain extends Administrador {
 		String insercion = "INSERT INTO [Blockchain].[dbo].[RootHash] "
 							+"(hashroot)" 
 							+ "VALUES (?)";
-		
-		//Informao la insert
-		System.out.println(">>SQL: " + insercion);
+
 
 		// preparo la insercion
 		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
@@ -201,10 +154,10 @@ public class AdministradorBlockchain extends Administrador {
 		this.setBlockchainLocal(getBlockchain());
 		
 		List<String> hashtree = new ArrayList<String>();
-		for (Bloque bloque: getBlockchainLocal())
-			hashtree.add(bloque.getHash());
-			
-		
+		for (Bloque bloque: getBlockchainLocal()) {
+			bloque.generarHash();
+			hashtree.add(bloque.getHash());	
+		}
 		MerkleTree merkletree = new MerkleTree(hashtree);
 		merkletree.merkle_tree();
 		this.setRootHash(merkletree.getRoot());
@@ -219,7 +172,6 @@ public class AdministradorBlockchain extends Administrador {
 				"  FROM [Blockchain].[dbo].[RootHash]\r\n" + 
 				"  order by idRoot desc";
 		
-		System.out.println("antess de iniciar");
 		Statement stmtConsulta = connection().createStatement();
 		ResultSet rs = stmtConsulta.executeQuery(consulta);
 
@@ -231,8 +183,6 @@ public class AdministradorBlockchain extends Administrador {
 		}
 		// cierro el statement
 		stmtConsulta.close();
-		
-		System.out.println(this.getRootHash());
 		return mHashRootBD;
 	}
 
@@ -249,9 +199,6 @@ public class AdministradorBlockchain extends Administrador {
 		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
 		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]Truncate Table [Blockchain].[dbo].[RootHash]";
-		
-		//Informao la inser
-		System.out.println(">>SQL: " + elTruncate);
 
 		// preparo la insercion
 		PreparedStatement stmt = connection().prepareStatement(elTruncate);
@@ -287,11 +234,19 @@ public class AdministradorBlockchain extends Administrador {
 	}
 	
 	public boolean consistenciaBlockChain() throws Exception{
+		this.setBlockchainLocal(getBlockchain());
+		
+		if (blockchainLocal.isEmpty()) {
+			return true;
+		}else {
+		
 		actualizarRootLocal();
+		
 		if(getUltimoHashRootBD().equals(this.getRootHash())) {
 			return true;
 		}else {
 			return false;			
+		}
 		}
 	}
 	public ArrayList<Bloque> getBlockchainLocal() {
