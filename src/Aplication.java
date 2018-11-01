@@ -1,8 +1,6 @@
-import app.AdministradorBlockchain;
-import app.IAdministrador;
-import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.controlador.AdministradorBlockchain;
+import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 import ar.edu.ub.si.blockchain.vista.AdminScreen;
-
 
 
 
@@ -16,6 +14,7 @@ public class Aplication {
 		
 		AdminScreen.generateScreen( admin );
 		
+
 	}
 	
 	
