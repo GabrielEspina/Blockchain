@@ -4,4 +4,4 @@
 /ar/
 /images/
 
-.classpath
+*.class
