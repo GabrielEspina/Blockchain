@@ -24,7 +24,7 @@ public class BloqueTableModel extends AbstractTableModel{
     };
     @SuppressWarnings("rawtypes")
 	private final Class[] columnClass = new Class[] {
-        String.class, String.class, String.class, Date.class
+        String.class, String.class, String.class, String.class
     };
     
 	public BloqueTableModel(ArrayList<Bloque> bloqueList) {
@@ -69,7 +69,7 @@ public class BloqueTableModel extends AbstractTableModel{
             return row.getPreviousHash();
         }
         else if(3 == columnIndex) {
-            return row.getTimeStamp();
+            return row.getTsbd();
         }
         return null;
     }
@@ -94,7 +94,7 @@ public class BloqueTableModel extends AbstractTableModel{
             row.setPreviousHash((String) aValue);
         }
         else if(3 == columnIndex) {
-            row.setTimeStamp((Date) aValue);
+            row.setTsbd((String) aValue);
         }
     }
     
