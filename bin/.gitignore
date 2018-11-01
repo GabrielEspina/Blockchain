@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /Administrador.class
 /AdministradorBlockchain.class
 /Aplication.class
@@ -13,3 +14,12 @@
 /images/
 
 *.class
+=======
+/Administrador.class
+/AdministradorBlockchain.class
+/Aplication.class
+/ar/
+/images/
+
+.classpath
+>>>>>>> master
