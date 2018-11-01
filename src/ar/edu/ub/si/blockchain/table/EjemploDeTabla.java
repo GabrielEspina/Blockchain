@@ -16,7 +16,7 @@ import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
-public class TableExample extends JFrame
+public class EjemploDeTabla extends JFrame
 {
 	
 	private Timer timerVentana;
@@ -26,7 +26,7 @@ public class TableExample extends JFrame
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public TableExample() throws Exception
+	public EjemploDeTabla() throws Exception
     {
 		
 		ArrayList<Bloque> bloques;

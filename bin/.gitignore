@@ -1,1 +1,7 @@
 /ar/
+<<<<<<< HEAD
+=======
+/images/
+/bin/
+*.classpath
+>>>>>>> master
