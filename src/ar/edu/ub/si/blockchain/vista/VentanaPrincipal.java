@@ -123,7 +123,6 @@ public class VentanaPrincipal extends JFrame
 		try {
 			if(archivo.exists()) {
 				ruta = file.getSelectedFile().toString();
-                System.out.println(ruta);
                 showMessage(getAdmin().validarArchivo(archivo));
                 
 			}else {
