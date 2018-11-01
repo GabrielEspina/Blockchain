@@ -17,6 +17,7 @@ public class Bloque implements IOperacionesHash{
 	private String 	hashDato;
 	private String 	previousHash;
 	private Date 	timeStamp;
+	private String  tsbd;
 	
 	
 	public Bloque( String previousHash , String hashDato) {
@@ -33,7 +34,7 @@ public class Bloque implements IOperacionesHash{
 		this.setHash(null);
 		this.setHashDato(null);
 		this.setPreviousHash(null);
-		this.setTimeStamp(null);
+		this.setTsbd(null);
 	}
 
 
@@ -113,6 +114,16 @@ public class Bloque implements IOperacionesHash{
 	@Override
 	public String getHash() {
 		return hash;
+	}
+
+
+	public String getTsbd() {
+		return tsbd;
+	}
+
+
+	public void setTsbd(String tsbd) {
+		this.tsbd = tsbd;
 	}
 
 
