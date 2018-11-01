@@ -84,14 +84,7 @@ public class Bloque implements IOperacionesHash{
 
 	@Override
 	public void generarHash() {
-		/*
-		String hashcode = Integer.toString(Objects.hash(
-				this.hashCode(),
-				getTimeStamp(),
-				getPreviousHash()));
-		
-		setHash(hashcode);*/
-		
+
 		MessageDigest m;
 		try {
 			m = MessageDigest.getInstance("MD5");
