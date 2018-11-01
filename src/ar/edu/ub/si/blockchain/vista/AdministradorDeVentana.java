@@ -5,25 +5,25 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 
-public class AdminScreen {
+public class AdministradorDeVentana {
 	
 	
-	private static MainScreen pantallaPrincipal ;
+	private static VentanaPrincipal pantallaPrincipal ;
 	
 	
-	public static void generateScreen(IAdministrador admin) {
+	public static void generarVentana(IAdministrador admin) {
 		
-		configFileChooserStyle();
+		configurarEstiloDeBusqueda();
 		
-		createScreen(admin);
+		crearVentana(admin);
 		
-		configScreen();
+		configurarVentana();
 		
 	}
 
 	
 
-	private static void configFileChooserStyle() {
+	private static void configurarEstiloDeBusqueda() {
 		
 		//SETEAMOS EL ESTILO QUE TENDRA EL BUSCADOR DE ARCHIVOS
 		try {
@@ -40,11 +40,11 @@ public class AdminScreen {
 		
 	}
 	
-	private static void createScreen(IAdministrador admin) {
-		pantallaPrincipal = new MainScreen(admin);
+	private static void crearVentana(IAdministrador admin) {
+		pantallaPrincipal = new VentanaPrincipal(admin);
 	}
 
-	private static void configScreen() {
+	private static void configurarVentana() {
 		pantallaPrincipal.setVisible(true);
 		//pantallaPrincipal.setBounds(200, 200, 400, 250);
 	}

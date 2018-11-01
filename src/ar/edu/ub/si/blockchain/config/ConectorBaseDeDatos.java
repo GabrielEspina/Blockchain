@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import ar.edu.ub.si.blockchain.interfaces.IConfiguracion;
-import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
 public abstract class ConectorBaseDeDatos {

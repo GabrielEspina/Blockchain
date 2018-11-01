@@ -1,4 +1,5 @@
 package ar.edu.ub.si.blockchain.controlador;
+
 import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 import ar.edu.ub.si.blockchain.interfaces.IConfiguracion;
@@ -19,24 +20,25 @@ public abstract class Administrador implements IAdministrador{
 		openConnection();
 		
 	}
+
 	
-	public void connection(Configuracion configuration) {
-		
-	}
-	
-	public IConfiguracion configuration() {
+	private IConfiguracion configuration() {
 		return this.configuration;
 	}
 	
-	public Connection connection() {
+	protected Connection connection() {
 		
 		return this.connection;
+	}
+	
+	private void connection(Connection connection) {
+		this.connection = connection;
 	}
 	
 	@Override
 	public void openConnection() {
 		try {
-			this.connection = ConectorBaseDeDatos.obtenerConexion( configuration() );
+			connection( ConectorBaseDeDatos.obtenerConexion( configuration() ));
 		} catch (Exception e) {
 			System.out.println("No se pudo conectar");
 			e.printStackTrace();
@@ -49,7 +51,6 @@ public abstract class Administrador implements IAdministrador{
 		try {
 			this.connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

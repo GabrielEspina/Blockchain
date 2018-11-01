@@ -6,11 +6,11 @@ import java.io.File;
 import javax.swing.*;
 
 import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
-import ar.edu.ub.si.blockchain.table.TableExample;
+import ar.edu.ub.si.blockchain.table.EjemploDeTabla;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
-public class MainScreen extends JFrame 
+public class VentanaPrincipal extends JFrame 
 {
 
 	private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class MainScreen extends JFrame
 	private IAdministrador admin;
 	
 	
-	public MainScreen(IAdministrador admin) 
+	public VentanaPrincipal(IAdministrador admin) 
 	{
 		setAdmin(admin);
 		
@@ -83,7 +83,7 @@ public class MainScreen extends JFrame
             
             public void run() {
                 try {
-					new TableExample();
+					new EjemploDeTabla();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
