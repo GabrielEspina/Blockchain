@@ -65,7 +65,8 @@ public class AdministradorBlockchain extends Administrador {
 			bl.setHash(rs.getString("Hash").trim());
 			bl.setHashDato(rs.getString("HashDato").trim());
 			bl.setPreviousHash(rs.getString("PreviusHash").trim());
-			bl.setTimeStamp(rs.getDate("TimeStamp"));
+			
+			//bl.setTimeStamp(rs.getDate("TimeStamp"));
 			//bl.setTimeStamp(convertUtilToJava(rs.getDate("TimeStamp")));
 			
 			// agrego el bloque al array
@@ -98,7 +99,8 @@ public class AdministradorBlockchain extends Administrador {
 		ps.setString(1, blockChain.getHash());
 		ps.setString(2, blockChain.getHashDato());
 		ps.setString(3, blockChain.getPreviousHash());
-		ps.setDate(4, convertUtilToSql(blockChain.getTimeStamp()));
+		ps.setString(4, blockChain.getTimeStamp().toString());
+		//ps.setDate(4, convertUtilToSql(blockChain.getTimeStamp()));
 		
 		ps.execute();
 		
@@ -130,6 +132,7 @@ public class AdministradorBlockchain extends Administrador {
 		}	
 	}
 	
+
 
 
 	private void validarDato(Dato dato) throws Exception {
