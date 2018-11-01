@@ -16,6 +16,7 @@ public abstract class Administrador implements IAdministrador{
 	public Administrador(String configuration) {
 		
 		this.configuration = new Configuracion(configuration);
+		openConnection();
 		
 	}
 	

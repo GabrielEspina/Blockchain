@@ -3,5 +3,5 @@
 /Aplication.class
 /ar/
 /images/
-
-.classpath
+/bin/
+*.classpath

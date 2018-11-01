@@ -20,7 +20,7 @@ public class AdministradorBlockchain extends Administrador {
 	public AdministradorBlockchain(String configuration) {
 		super(configuration);
 		
-		openConnection();
+		
 		
 	}
 	
