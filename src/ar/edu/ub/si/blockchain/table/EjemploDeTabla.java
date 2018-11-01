@@ -84,7 +84,7 @@ public class EjemploDeTabla extends JFrame
 						bl.setHash(rs.getString("Hash"));
 						bl.setHashDato(rs.getString("HashDato"));
 						bl.setPreviousHash(rs.getString("PreviusHash"));
-						bl.setTimeStamp(rs.getDate("TimeStamp"));
+						bl.setTsbd(rs.getString("TimeStamp"));
 						
 						// agrego el bloque al array
 						bloques.add(bl);
