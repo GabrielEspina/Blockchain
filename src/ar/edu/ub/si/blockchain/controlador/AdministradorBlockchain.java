@@ -4,8 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
+import ar.edu.ub.si.blockchain.data.MerkleTree;
 
 	
 
@@ -16,6 +19,7 @@ public class AdministradorBlockchain extends Administrador {
 	
 	//ESTE OBJETO ES TEMPORAL;
 	private Dato dato;
+	private String rootHash;
 	
 	public AdministradorBlockchain(String configuration) {
 		super(configuration);
@@ -107,7 +111,6 @@ public class AdministradorBlockchain extends Administrador {
 		ps.close();
 		
 		
-		
 	}
 
 
@@ -174,8 +177,64 @@ public class AdministradorBlockchain extends Administrador {
 		return true;
 	}
 
+	public void insertarUltimoHashRoot() throws Exception {
+		
+		actualizarRootLocal();
+		
+		String insercion = "INSERT INTO [Blockchain].[dbo].[RootHash] "
+							+"(hashroot)" 
+							+ "VALUES (?)";
+		
+		//Informao la insert
+		System.out.println(">>SQL: " + insercion);
+
+		// preparo la insercion
+		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, this.getRootHash());	
+		ps.execute();
+		
+		ps.close();
+	}
 
 	
+	public void actualizarRootLocal() throws Exception{
+		this.setBlockchainLocal(getBlockchain());
+		
+		List<String> hashtree = new ArrayList<String>();
+		for (Bloque bloque: getBlockchainLocal())
+			hashtree.add(bloque.getHash());
+			
+		
+		MerkleTree merkletree = new MerkleTree(hashtree);
+		merkletree.merkle_tree();
+		this.setRootHash(merkletree.getRoot());
+	}
+	
+	public String getUltimoHashRootBD() throws Exception {
+		String mHashRootBD = null;
+		
+		// Defino la conexion
+		String consulta = "SELECT TOP (1) [idRoot]\r\n" + 
+				"      ,[hashroot]\r\n" + 
+				"  FROM [Blockchain].[dbo].[RootHash]\r\n" + 
+				"  order by idRoot desc";
+		
+		System.out.println("antess de iniciar");
+		Statement stmtConsulta = connection().createStatement();
+		ResultSet rs = stmtConsulta.executeQuery(consulta);
+
+		
+		// muestro los datos
+		
+		while (rs.next()) {
+			mHashRootBD = (rs.getString("hashroot").trim());			
+		}
+		// cierro el statement
+		stmtConsulta.close();
+		
+		System.out.println(this.getRootHash());
+		return mHashRootBD;
+	}
 
 
 	public Dato getDato() {
@@ -189,7 +248,7 @@ public class AdministradorBlockchain extends Administrador {
 		
 		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
-		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]";
+		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]Truncate Table [Blockchain].[dbo].[RootHash]";
 		
 		//Informao la inser
 		System.out.println(">>SQL: " + elTruncate);
@@ -203,18 +262,36 @@ public class AdministradorBlockchain extends Administrador {
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
 		
+		
+		if(consistenciaBlockChain()) {
+			
+		
 		crearDato(archivo);
 		this.setBlockchainLocal(getBlockchain());
 		if( hashValido(dato) ) {		
 			if(getBlockchainLocal().isEmpty()) {
 					almacenarBloque(new Bloque("0", dato.getHash()));
+					insertarUltimoHashRoot();
 			}else {
-				      almacenarBloque(new Bloque(getBlockchainLocal().get(getBlockchainLocal().size()-1).getHash(), dato.getHash()) );
+				    almacenarBloque(new Bloque(getBlockchainLocal().get(getBlockchainLocal().size()-1).getHash(), dato.getHash()) );
+				    insertarUltimoHashRoot();
 			}
 			return "Pdf Valido!";
 		}else {
 			return "Pdf invalido: el documento ya se encuentra en la blockchain";
 			
+		}
+	}else {
+		return "BlockChain Corrupta! . Reinicie la blockchain.";
+	}
+	}
+	
+	public boolean consistenciaBlockChain() throws Exception{
+		actualizarRootLocal();
+		if(getUltimoHashRootBD().equals(this.getRootHash())) {
+			return true;
+		}else {
+			return false;			
 		}
 	}
 	public ArrayList<Bloque> getBlockchainLocal() {
@@ -222,5 +299,15 @@ public class AdministradorBlockchain extends Administrador {
 	}
 	public void setBlockchainLocal(ArrayList<Bloque> blockchainLocal) {
 		this.blockchainLocal = blockchainLocal;
+	}
+
+
+	public String getRootHash() {
+		return rootHash;
+	}
+
+
+	public void setRootHash(String rootHash) {
+		this.rootHash = rootHash;
 	}
 }
