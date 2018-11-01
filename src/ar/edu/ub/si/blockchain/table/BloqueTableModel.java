@@ -2,7 +2,6 @@ package ar.edu.ub.si.blockchain.table;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -23,7 +22,8 @@ public class BloqueTableModel extends AbstractTableModel{
     private final String[] columnNames = new String[] {
             "Hash", "Hash Dato", "Previous Hash", "TimeStamp"
     };
-    private final Class[] columnClass = new Class[] {
+    @SuppressWarnings("rawtypes")
+	private final Class[] columnClass = new Class[] {
         String.class, String.class, String.class, Date.class
     };
     

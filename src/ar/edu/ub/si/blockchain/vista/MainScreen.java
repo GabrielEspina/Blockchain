@@ -1,15 +1,11 @@
 package ar.edu.ub.si.blockchain.vista;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
+import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 import ar.edu.ub.si.blockchain.table.TableExample;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
@@ -21,20 +17,25 @@ public class MainScreen extends JFrame
 	
 	private String ruta;
 	private Configuracion configuracion;
+	private IAdministrador admin;
 	
-	private IAdministradorBlockchain admin;
-	public MainScreen(IAdministradorBlockchain admin) 
+	
+	public MainScreen(IAdministrador admin) 
 	{
 		setAdmin(admin);
+		
 		this.startWindow();
 		this.addElements();
 	}
 
 	private void startWindow() {
-		this.setLocation(300, 300);
-		this.setSize(500, 100);
+		this.setLocation(300, 200);
+		this.setSize(500, 300);
 		this.setResizable(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);	
+		this.setTitle("Blockchain");
+		this.setIconImage(new ImageIcon(getClass().getResource("/images/icon.png")).getImage());
+		
 	}
 
 
@@ -93,7 +94,7 @@ public class MainScreen extends JFrame
 	
 	public void onClickDatabaseDelete (ActionEvent e) {
 		try {
-			admin.eliminarTodosLosRegistros();
+			getAdmin().eliminarTodosLosRegistros();
 			showMessage("Base de datos Truncada!");
 			
 		} catch (Exception e1) {
@@ -106,6 +107,7 @@ public class MainScreen extends JFrame
 	}
 	
 	public void onClickMenuExit(ActionEvent e) {
+		getAdmin().closeConnection();
 		this.dispose();
 	}
 	
@@ -116,18 +118,16 @@ public class MainScreen extends JFrame
 		JFileChooser file = new JFileChooser();
 		file.showOpenDialog(this);
 		File archivo = file.getSelectedFile(); 
-		String texto;
 		
 		
 		try {
 			if(archivo.exists()) {
 				ruta = file.getSelectedFile().toString();
                 System.out.println(ruta);
-                texto = archivo.getName();
                 showMessage(getAdmin().validarArchivo(archivo));
                 
 			}else {
-                texto = "El archivo no existe"; 
+                showMessage("El archivo no existe");
             }
 		}catch (Exception ex) {
             
@@ -140,11 +140,11 @@ public class MainScreen extends JFrame
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
 
-	public IAdministradorBlockchain getAdmin() {
+	public IAdministrador getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(IAdministradorBlockchain admin) {
+	public void setAdmin(IAdministrador admin) {
 		this.admin = admin;
 	}
 

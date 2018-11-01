@@ -1,4 +1,4 @@
-package ar.edu.ub.si.blockchain.connectordb;
+package ar.edu.ub.si.blockchain.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,13 +6,14 @@ import java.sql.DriverManager;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
-public abstract class AdministradorDeConexiones {
+public abstract class ConectorBaseDeDatos {
 	
 	
-	public AdministradorDeConexiones() {
+	public ConectorBaseDeDatos() {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Connection obtenerConexion(Configuracion configuracion) throws Exception {
 		
 		

@@ -3,8 +3,7 @@ package ar.edu.ub.si.blockchain.vista;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
-import ar.edu.ub.si.blockchain.util.Configuracion;
+import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 
 public class AdminScreen {
 	
@@ -12,7 +11,7 @@ public class AdminScreen {
 	private static MainScreen pantallaPrincipal ;
 	
 	
-	public static void generateScreen(IAdministradorBlockchain admin) {
+	public static void generateScreen(IAdministrador admin) {
 		
 		configFileChooserStyle();
 		
@@ -41,7 +40,7 @@ public class AdminScreen {
 		
 	}
 	
-	private static void createScreen(IAdministradorBlockchain admin) {
+	private static void createScreen(IAdministrador admin) {
 		pantallaPrincipal = new MainScreen(admin);
 	}
 
