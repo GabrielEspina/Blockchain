@@ -97,10 +97,6 @@ public class AdministradorBlockchain extends Administrador {
 	}
 
 
-	
-
-
-
 	private void validarDato(Dato dato) throws Exception {
 		
 		if( hashValido(dato) )
@@ -125,20 +121,16 @@ public class AdministradorBlockchain extends Administrador {
 	private boolean hashValido( Dato dato ) {
 		
 		try {
-			System.out.println("Validando dato...");
 			for(Bloque bloque: getBlockchainLocal()) {
-				System.out.println("dato viejo: " + bloque.getHashDato().length());
 				if(bloque.getHashDato().equals(dato.getHash()))
 					return false;
 			}
-				
-				
 		} catch (Exception e) {
-			System.out.println("error");
 			e.printStackTrace();
 		}
 		return true;
 	}
+	
 
 	public void insertarUltimoHashRoot() throws Exception {
 		
@@ -147,9 +139,7 @@ public class AdministradorBlockchain extends Administrador {
 		String insercion = "INSERT INTO [Blockchain].[dbo].[RootHash] "
 							+"(hashroot)" 
 							+ "VALUES (?)";
-		
-		//Informao la insert
-		System.out.println(">>SQL: " + insercion);
+
 
 		// preparo la insercion
 		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
@@ -164,10 +154,10 @@ public class AdministradorBlockchain extends Administrador {
 		this.setBlockchainLocal(getBlockchain());
 		
 		List<String> hashtree = new ArrayList<String>();
-		for (Bloque bloque: getBlockchainLocal())
-			hashtree.add(bloque.getHash());
-			
-		
+		for (Bloque bloque: getBlockchainLocal()) {
+			bloque.generarHash();
+			hashtree.add(bloque.getHash());	
+		}
 		MerkleTree merkletree = new MerkleTree(hashtree);
 		merkletree.merkle_tree();
 		this.setRootHash(merkletree.getRoot());
@@ -182,7 +172,6 @@ public class AdministradorBlockchain extends Administrador {
 				"  FROM [Blockchain].[dbo].[RootHash]\r\n" + 
 				"  order by idRoot desc";
 		
-		System.out.println("antess de iniciar");
 		Statement stmtConsulta = connection().createStatement();
 		ResultSet rs = stmtConsulta.executeQuery(consulta);
 
@@ -194,8 +183,6 @@ public class AdministradorBlockchain extends Administrador {
 		}
 		// cierro el statement
 		stmtConsulta.close();
-		
-		System.out.println(this.getRootHash());
 		return mHashRootBD;
 	}
 
@@ -212,9 +199,6 @@ public class AdministradorBlockchain extends Administrador {
 		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
 		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]Truncate Table [Blockchain].[dbo].[RootHash]";
-		
-		//Informao la inser
-		System.out.println(">>SQL: " + elTruncate);
 
 		// preparo la insercion
 		PreparedStatement stmt = connection().prepareStatement(elTruncate);
