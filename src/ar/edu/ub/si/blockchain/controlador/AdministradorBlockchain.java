@@ -179,19 +179,7 @@ public class AdministradorBlockchain extends Administrador {
 
 	public void insertarUltimoHashRoot() throws Exception {
 		
-		
-		this.setBlockchainLocal(getBlockchain());
-		
-		List<String> hashtree = new ArrayList<String>();
-		for (Bloque bloque: getBlockchainLocal())
-			hashtree.add(bloque.getHash());
-			
-		
-		MerkleTree merkletree = new MerkleTree(hashtree);
-		merkletree.merkle_tree();
-		this.setRootHash(merkletree.getRoot());
-		
-		System.out.println(merkletree.getRoot());
+		actualizarRootLocal();
 		
 		String insercion = "INSERT INTO [Blockchain].[dbo].[RootHash] "
 							+"(hashroot)" 
@@ -208,22 +196,44 @@ public class AdministradorBlockchain extends Administrador {
 		ps.close();
 	}
 
-	public String getUltimoHashRoot() throws Exception {
+	
+	public void actualizarRootLocal() throws Exception{
+		this.setBlockchainLocal(getBlockchain());
+		
+		List<String> hashtree = new ArrayList<String>();
+		for (Bloque bloque: getBlockchainLocal())
+			hashtree.add(bloque.getHash());
+			
+		
+		MerkleTree merkletree = new MerkleTree(hashtree);
+		merkletree.merkle_tree();
+		this.setRootHash(merkletree.getRoot());
+	}
+	
+	public String getUltimoHashRootBD() throws Exception {
+		String mHashRootBD = null;
+		
 		// Defino la conexion
-		String consulta = "SELECT * FROM [Blockchain].[dbo].[RootHash]";
+		String consulta = "SELECT TOP (1) [idRoot]\r\n" + 
+				"      ,[hashroot]\r\n" + 
+				"  FROM [Blockchain].[dbo].[RootHash]\r\n" + 
+				"  order by idRoot desc";
+		
+		System.out.println("antess de iniciar");
 		Statement stmtConsulta = connection().createStatement();
 		ResultSet rs = stmtConsulta.executeQuery(consulta);
-		
-		//INFORMO QUE SE ESTA POR HACER LA CONSULTA
-		System.out.println(">>SQL: " + consulta);
-		System.out.println(rs.getString("hashroot"));
 
-		this.setRootHash(rs.getString("hashroot"));
-	
+		
+		// muestro los datos
+		
+		while (rs.next()) {
+			mHashRootBD = (rs.getString("hashroot").trim());			
+		}
 		// cierro el statement
 		stmtConsulta.close();
 		
-		return rs.getString("hashroot");
+		System.out.println(this.getRootHash());
+		return mHashRootBD;
 	}
 
 
@@ -252,6 +262,10 @@ public class AdministradorBlockchain extends Administrador {
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
 		
+		
+		if(consistenciaBlockChain()) {
+			
+		
 		crearDato(archivo);
 		this.setBlockchainLocal(getBlockchain());
 		if( hashValido(dato) ) {		
@@ -266,6 +280,18 @@ public class AdministradorBlockchain extends Administrador {
 		}else {
 			return "Pdf invalido: el documento ya se encuentra en la blockchain";
 			
+		}
+	}else {
+		return "BlockChain Corrupta! . Reinicie la blockchain.";
+	}
+	}
+	
+	public boolean consistenciaBlockChain() throws Exception{
+		actualizarRootLocal();
+		if(getUltimoHashRootBD().equals(this.getRootHash())) {
+			return true;
+		}else {
+			return false;			
 		}
 	}
 	public ArrayList<Bloque> getBlockchainLocal() {
