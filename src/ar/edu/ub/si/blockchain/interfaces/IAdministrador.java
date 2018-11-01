@@ -5,15 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import ar.edu.ub.si.blockchain.data.Bloque;
-import ar.edu.ub.si.blockchain.data.Dato;
 
-public interface IAdministradorBlockchain {
+public interface IAdministrador {
+	
+	public void openConnection();
+	public void closeConnection();
 	
 	public void crearDato(File arhivo);
 	
 	public void generarBlockchain(); 
-	
-	public ArrayList<Dato> getDatos();
 	
 	public  ArrayList<Bloque> getBlockchain() throws SQLException, Exception;
 	

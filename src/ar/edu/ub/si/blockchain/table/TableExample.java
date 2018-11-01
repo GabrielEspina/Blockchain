@@ -5,18 +5,14 @@ package ar.edu.ub.si.blockchain.table;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.table.DefaultTableModel;
 
-import ar.edu.ub.si.blockchain.connectordb.AdministradorDeConexiones;
+import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
@@ -66,7 +62,7 @@ public class TableExample extends JFrame
 		
 		Configuracion configuracion = new Configuracion("blockchain.properties");
 		// Defino la conexion
-				Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
+				Connection laConexion = ConectorBaseDeDatos.obtenerConexion(configuracion);
 				
 					String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
 					Statement stmtConsulta = laConexion.createStatement();
@@ -77,7 +73,7 @@ public class TableExample extends JFrame
 					
 					// Armo el array de bloques
 					
-					ArrayList<Bloque> bloques = new ArrayList();
+					ArrayList<Bloque> bloques = new ArrayList<Bloque>();
 					
 					// muestro los datos
 					

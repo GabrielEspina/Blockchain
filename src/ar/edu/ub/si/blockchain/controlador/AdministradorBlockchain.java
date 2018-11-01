@@ -1,31 +1,27 @@
+package ar.edu.ub.si.blockchain.controlador;
 import java.io.File;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import ar.edu.ub.si.blockchain.connectordb.AdministradorDeConexiones;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
-import ar.edu.ub.si.blockchain.interfaces.IAdministradorBlockchain;
-import ar.edu.ub.si.blockchain.util.Configuracion;
 
 	
 
-public class AdministradorBlockchain implements IAdministradorBlockchain{
+public class AdministradorBlockchain extends Administrador {
 	
 	//CREAMOS LA BLOCKCHAIN	
-	private  ArrayList<Bloque> blockchain;
-	private  ArrayList<Dato> datos;
 	private  ArrayList<Bloque> blockchainLocal;
 	
 	//ESTE OBJETO ES TEMPORAL;
 	private Dato dato;
 	
-	public AdministradorBlockchain() {
+	public AdministradorBlockchain(String configuration) {
+		super(configuration);
 		
-		setBlockchain(new ArrayList<Bloque>());
-		setDatos(new ArrayList<Dato>());
+		openConnection();
+		
 	}
 	
 	
@@ -34,11 +30,6 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		setDato(new Dato(archivo));	
 	}
 
-	@Override
-	public ArrayList<Dato> getDatos() {
-		
-		return datos;
-	}
 	
 	@Override
 	public void generarBlockchain() {
@@ -52,17 +43,15 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	
 	@Override
 	public  ArrayList<Bloque> getBlockchain() throws Exception{
-		
-		Configuracion configuracion = new Configuracion("blockchain.properties");
 		// Defino la conexion
-		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
 		
-		String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
-		Statement stmtConsulta = laConexion.createStatement();
-		ResultSet rs = stmtConsulta.executeQuery(laConsulta);
+		
+		String consulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
+		Statement stmtConsulta = connection().createStatement();
+		ResultSet rs = stmtConsulta.executeQuery(consulta);
 		
 		//INFORMO QUE SE ESTA POR HACER LA CONSULTA
-		System.out.println(">>SQL: " + laConsulta);
+		System.out.println(">>SQL: " + consulta);
 		
 		// Armo el array de bloques
 		
@@ -93,22 +82,19 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	@Override
 	public void almacenarBloque(Bloque blockChain) throws Exception {
 		
-		Configuracion configuracion = new Configuracion("blockchain.properties");
 		
-		// Defino la conexion
-		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
 		
 		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
-		String laInsercion = "INSERT INTO [Blockchain].[dbo].[Hash] "
+		String insercion = "INSERT INTO [Blockchain].[dbo].[Hash] "
 							+"(Hash, HashDato, PreviusHash, TimeStamp)" 
 							+ "VALUES (?,?,?,?)";
 		
 		//Informao la inser
-		System.out.println(">>SQL: " + laInsercion);
+		System.out.println(">>SQL: " + insercion);
 
 		// preparo la insercion
-		PreparedStatement ps = laConexion.prepareStatement(laInsercion, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, blockChain.getHash());
 		ps.setString(2, blockChain.getHashDato());
 		ps.setString(3, blockChain.getPreviousHash());
@@ -118,7 +104,7 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		
 		ps.close();
 		
-		laConexion.close();
+		
 		
 	}
 
@@ -128,10 +114,7 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		return sDate;
 	}
 	
-	private java.util.Date convertUtilToJava(java.sql.Date sDate){
-		java.util.Date jDate = new java.util.Date(sDate.getDate());
-		return jDate;
-	}
+
 	
 	@Override
 	public void mostrarBlockChain() throws Exception {
@@ -188,13 +171,9 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		return true;
 	}
 
-	private void setBlockchain(ArrayList<Bloque> blockchain){
-		this.blockchain = blockchain;
-	}
+
 	
-	private void setDatos(ArrayList<Dato> datos){
-		this.datos = datos;
-	}
+
 
 	public Dato getDato() {
 		return dato;
@@ -205,12 +184,6 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 	@Override
 	public void eliminarTodosLosRegistros() throws Exception {
 		
-		
-		Configuracion configuracion = new Configuracion("blockchain.properties");
-		
-		// Defino la conexion
-		Connection laConexion = AdministradorDeConexiones.obtenerConexion(configuracion);
-		
 		// EN algun momento lo paso como sp dentro de la base de datos para llamar a SP_NUEVO_BLOQUE
 		//ARMAR UN INSERT
 		String elTruncate = "Truncate Table [Blockchain].[dbo].[Hash]";
@@ -219,10 +192,10 @@ public class AdministradorBlockchain implements IAdministradorBlockchain{
 		System.out.println(">>SQL: " + elTruncate);
 
 		// preparo la insercion
-		PreparedStatement stmt = laConexion.prepareStatement(elTruncate);
+		PreparedStatement stmt = connection().prepareStatement(elTruncate);
 		stmt.execute();
 		stmt.close();
-		laConexion.close();	
+		
 	}
 	@Override
 	public String validarArchivo(File archivo) throws Exception {
