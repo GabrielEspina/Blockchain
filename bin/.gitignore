@@ -12,4 +12,4 @@
 /ar/
 /images/
 
-.classpath
+*.class
