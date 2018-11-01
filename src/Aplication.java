@@ -7,11 +7,11 @@ public class Aplication {
 
 	public static void main(String[] args) {
 
-		IAdministrador admin = new AdministradorBlockchain("blockchain.properties");
+		IAdministrador admin = new AdministradorBlockchain(args[0]);
 		
 		
 		AdministradorDeVentana.generarVentana( admin );
-		
+	
 	}
 		
 }
