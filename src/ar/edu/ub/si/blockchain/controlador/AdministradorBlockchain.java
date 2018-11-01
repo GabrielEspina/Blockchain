@@ -141,6 +141,7 @@ public class AdministradorBlockchain extends Administrador {
 							+ "VALUES (?)";
 
 
+
 		// preparo la insercion
 		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, this.getRootHash());	
@@ -210,7 +211,7 @@ public class AdministradorBlockchain extends Administrador {
 	public String validarArchivo(File archivo) throws Exception {
 		
 		
-		if(consistenciaBlockChain()) {
+		if(validarBlockChain()) {
 			
 		
 		crearDato(archivo);
@@ -223,9 +224,9 @@ public class AdministradorBlockchain extends Administrador {
 				    almacenarBloque(new Bloque(getBlockchainLocal().get(getBlockchainLocal().size()-1).getHash(), dato.getHash()) );
 				    insertarUltimoHashRoot();
 			}
-			return "Pdf Valido!";
+			return "Archivo Valido!";
 		}else {
-			return "Pdf invalido: el documento ya se encuentra en la blockchain";
+			return "Archivo invalido: el archivo ya se encuentra en la blockchain";
 			
 		}
 	}else {
@@ -233,7 +234,7 @@ public class AdministradorBlockchain extends Administrador {
 	}
 	}
 	
-	public boolean consistenciaBlockChain() throws Exception{
+	public boolean validarBlockChain() throws Exception{
 		this.setBlockchainLocal(getBlockchain());
 		
 		if (blockchainLocal.isEmpty()) {
