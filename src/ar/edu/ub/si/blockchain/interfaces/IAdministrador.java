@@ -18,8 +18,6 @@ public interface IAdministrador {
 	public  ArrayList<Bloque> getBlockchain() throws SQLException, Exception;
 	
 	public void almacenarBloque(Bloque bloque) throws SQLException, Exception;
-	
-	public void mostrarBlockChain() throws SQLException,Exception;
 
 	public void eliminarTodosLosRegistros() throws SQLException, Exception;
 

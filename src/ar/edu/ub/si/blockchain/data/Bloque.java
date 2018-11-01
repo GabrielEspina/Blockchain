@@ -4,6 +4,8 @@ package ar.edu.ub.si.blockchain.data;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ar.edu.ub.si.blockchain.interfaces.IOperacionesHash;
@@ -110,6 +112,28 @@ public class Bloque implements IOperacionesHash{
 		
 		
 	}
+	
+	public String getTimeStampStr() {
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		//TRANSFORMO EL DATE EN UN STRING CON EL FORMATO INDICADO 
+		String dateString = df.format(this.getTimeStamp());
+		return dateString;
+	}
+	
+	public void setTimeStampStr(String timeStamp) {
+		try {
+			//ARMO UN OBJETO DATE CON EL STRING
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			Date date2 = df.parse(timeStamp);
+			this.setTimeStamp(date2);
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 
 	@Override
