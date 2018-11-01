@@ -3,18 +3,14 @@ package ar.edu.ub.si.blockchain.table;
 
 
 import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.Timer;
 
-import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.data.Bloque;
-import ar.edu.ub.si.blockchain.util.Configuracion;
+import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
 
 public class EjemploDeTabla extends JFrame
 {
@@ -24,13 +20,17 @@ public class EjemploDeTabla extends JFrame
     /**
 	 * 
 	 */
+	
+	IAdministrador admin;
 	private static final long serialVersionUID = 1L;
 
-	public EjemploDeTabla() throws Exception
+	public EjemploDeTabla(IAdministrador admin) throws Exception
     {
+		this.admin = admin;
+		
 		
 		ArrayList<Bloque> bloques;
-		bloques = obtenerBloques();
+		bloques = this.admin.getBloques();
         
         //create the model
         BloqueTableModel model = new BloqueTableModel(bloques);
@@ -57,43 +57,7 @@ public class EjemploDeTabla extends JFrame
 	
 	
 	// temporal
-	private ArrayList<Bloque> obtenerBloques () throws Exception{
-		
-		Configuracion configuracion = new Configuracion("blockchain.properties");
-		// Defino la conexion
-				Connection laConexion = ConectorBaseDeDatos.obtenerConexion(configuracion);
-				
-					String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
-					Statement stmtConsulta = laConexion.createStatement();
-					ResultSet rs = stmtConsulta.executeQuery(laConsulta);
-
-					
-					// Armo el array de bloques
-					
-					ArrayList<Bloque> bloques = new ArrayList<Bloque>();
-					
-					// muestro los datos
-					
-					while (rs.next()) {
-						
-						// armo el bloque con los datos obtenidos
-						Bloque bl = new Bloque();
-						bl.setHash(rs.getString("Hash"));
-						bl.setHashDato(rs.getString("HashDato"));
-						bl.setPreviousHash(rs.getString("PreviusHash"));
-						bl.setTsbd(rs.getString("TimeStamp"));
-						
-						// agrego el bloque al array
-						bloques.add(bl);
-						
-					}
-					
-					// cierro el statement
-					stmtConsulta.close();
-				laConexion.close();
-				
-				return bloques;
-	}
+	
 
 	public Timer getTimerVentana() {
 		return timerVentana;

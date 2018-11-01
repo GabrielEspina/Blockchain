@@ -23,5 +23,5 @@ public interface IAdministrador {
 
 	public String validarArchivo(File archivo) throws SQLException,Exception;
 
-	
+	public ArrayList<Bloque> getBloques ()  throws Exception;
 }

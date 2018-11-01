@@ -1,14 +1,17 @@
 package ar.edu.ub.si.blockchain.controlador;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 import ar.edu.ub.si.blockchain.data.MerkleTree;
+import ar.edu.ub.si.blockchain.util.Configuracion;
 
 	
 
@@ -232,6 +235,42 @@ public class AdministradorBlockchain extends Administrador {
 	}else {
 		return "BlockChain Corrupta! . Reinicie la blockchain.";
 	}
+	}
+
+	@Override
+	public ArrayList<Bloque> getBloques() throws Exception{
+		
+		// Defino la conexion
+				
+					String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
+					Statement stmtConsulta = connection().createStatement();
+					ResultSet rs = stmtConsulta.executeQuery(laConsulta);
+
+					
+					// Armo el array de bloques
+					
+					ArrayList<Bloque> bloques = new ArrayList<Bloque>();
+					
+					// muestro los datos
+					
+					while (rs.next()) {
+						
+						// armo el bloque con los datos obtenidos
+						Bloque bl = new Bloque();
+						bl.setHash(rs.getString("Hash"));
+						bl.setHashDato(rs.getString("HashDato"));
+						bl.setPreviousHash(rs.getString("PreviusHash"));
+						bl.setTsbd(rs.getString("TimeStamp"));
+						
+						// agrego el bloque al array
+						bloques.add(bl);
+						
+					}
+					
+					// cierro el statement
+					stmtConsulta.close();
+				
+				return bloques;
 	}
 	
 	public boolean validarBlockChain() throws Exception{

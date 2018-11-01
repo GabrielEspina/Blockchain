@@ -83,7 +83,7 @@ public class VentanaPrincipal extends JFrame
             
             public void run() {
                 try {
-					new EjemploDeTabla();
+					new EjemploDeTabla(admin);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
