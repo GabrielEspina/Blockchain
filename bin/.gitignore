@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/Administrador.class
-/AdministradorBlockchain.class
-/Aplication.class
-=======
-<<<<<<< HEAD
-=======
-/AdministradorBlockchain.class
-/Aplication.class
->>>>>>> master
->>>>>>> master
-/ar/
-/images/
-
-*.class
-=======
 /Administrador.class
 /AdministradorBlockchain.class
 /Aplication.class
@@ -22,4 +5,3 @@
 /images/
 
 .classpath
->>>>>>> master
