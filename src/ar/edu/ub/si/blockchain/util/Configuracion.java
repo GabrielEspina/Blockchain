@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Configuracion {
+import ar.edu.ub.si.blockchain.interfaces.IConfiguracion;
+
+public class Configuracion implements IConfiguracion{
 	
 	
 	private Properties properties;
@@ -27,16 +29,19 @@ public class Configuracion {
 		}
 	}
 	
+	@Override
 	public String getConfiguracion(String propiedad) {
 		
 		return this.getProperties().getProperty(propiedad);
 		
 	}
-
+	
+	@Override
 	public int getConfiguracionAsInt(String propiedad) {		
 		return Integer.parseInt( this.getProperties().getProperty(propiedad) );		
 	}
 	
+	@Override
 	public void close() {
 		
 		try {

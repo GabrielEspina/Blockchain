@@ -1,13 +1,14 @@
 package ar.edu.ub.si.blockchain.controlador;
 import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
 import ar.edu.ub.si.blockchain.interfaces.IAdministrador;
+import ar.edu.ub.si.blockchain.interfaces.IConfiguracion;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class Administrador implements IAdministrador{
 	
-	Configuracion configuration;
+	IConfiguracion configuration;
 	
 	Connection connection;
 	
@@ -22,7 +23,7 @@ public abstract class Administrador implements IAdministrador{
 		
 	}
 	
-	public Configuracion configuration() {
+	public IConfiguracion configuration() {
 		return this.configuration;
 	}
 	

@@ -7,7 +7,7 @@ public class Aplication {
 
 	public static void main(String[] args) {
 
-		IAdministrador admin = new AdministradorBlockchain("blockchain.properties");
+		IAdministrador admin = new AdministradorBlockchain("gespina.properties");
 		
 		
 		AdminScreen.generateScreen( admin );

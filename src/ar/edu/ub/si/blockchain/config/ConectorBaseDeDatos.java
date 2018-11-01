@@ -2,7 +2,9 @@ package ar.edu.ub.si.blockchain.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
+import ar.edu.ub.si.blockchain.interfaces.IConfiguracion;
 import ar.edu.ub.si.blockchain.util.Configuracion;
 
 
@@ -14,7 +16,7 @@ public abstract class ConectorBaseDeDatos {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static Connection obtenerConexion(Configuracion configuracion) throws Exception {
+	public static Connection obtenerConexion(IConfiguracion configuracion)  {
 		
 		
 		// Establecer el nombre del driver a utilizar
@@ -35,13 +37,30 @@ public abstract class ConectorBaseDeDatos {
 		
 		// Establece el driver de conexion
 		
-		Class.forName(dbDriver).newInstance();
+		try {
+			Class.forName(dbDriver).newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Retorna la conexion
 		
-		return DriverManager.getConnection(
-							dbConnString, dbUser, dbPassword
-				);
+		try {
+			return DriverManager.getConnection(
+								dbConnString, dbUser, dbPassword
+					);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 				
 	}
 }
