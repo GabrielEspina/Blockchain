@@ -37,7 +37,7 @@ public class Aplication {
 	    tempTxList.add("b");
 	    tempTxList.add("c");
 	    tempTxList.add("d");
-	   // tempTxList.add("e");
+	  //  tempTxList.add("e");
 	    
 	    
 	    // NOTA:  con ambos merkletrees,  si son pares los string que hay en el array, devuelve el mismo hash

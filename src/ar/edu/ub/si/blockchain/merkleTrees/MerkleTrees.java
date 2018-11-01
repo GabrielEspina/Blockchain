@@ -62,6 +62,8 @@ public class MerkleTrees  {
 	      String right = "";
 	      if (index != tempTxList.size()) {
 	        right = tempTxList.get(index);
+	      }else {
+	    	  right = left;
 	      }
 /*
 	      // sha2 hex value
