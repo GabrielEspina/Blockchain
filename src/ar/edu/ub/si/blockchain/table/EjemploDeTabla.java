@@ -51,7 +51,6 @@ public class EjemploDeTabla extends JFrame
     }
 	
 	public void refrescarVentana(ActionEvent e) {
-		System.out.println("hjola");
 		this.revalidate();
 		this.repaint();
 	}
@@ -67,9 +66,7 @@ public class EjemploDeTabla extends JFrame
 					String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
 					Statement stmtConsulta = laConexion.createStatement();
 					ResultSet rs = stmtConsulta.executeQuery(laConsulta);
-					
-					//INFORMO QUE SE ESTA POR HACER LA CONSULTA
-					System.out.println(">>SQL: " + laConsulta);
+
 					
 					// Armo el array de bloques
 					
