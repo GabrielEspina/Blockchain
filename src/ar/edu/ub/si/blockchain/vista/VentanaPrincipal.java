@@ -63,9 +63,9 @@ public class VentanaPrincipal extends JFrame
 		menuItem.addActionListener(this::onClickDatabaseRestart);
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Delete all records");
+		/*menuItem = new JMenuItem("Delete all records");
 		menuItem.addActionListener(this::onClickDatabaseDelete);
-		menu.add(menuItem);
+		menu.add(menuItem);*/
 		
 		
 		

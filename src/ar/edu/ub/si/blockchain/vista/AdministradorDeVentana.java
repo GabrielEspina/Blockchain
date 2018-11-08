@@ -13,10 +13,13 @@ public class AdministradorDeVentana {
 	
 	public static void generarVentana(IAdministrador admin) {
 		
+		//se configura el estilo del buscador de archivo para que sea mas interactiva
 		configurarEstiloDeBusqueda();
 		
+		//se crea la ventana que manejara las operaciones del administrador
 		crearVentana(admin);
 		
+		//configuro la ventana para poder visualizarlo
 		configurarVentana();
 		
 	}
