@@ -58,6 +58,10 @@ public class VentanaPrincipal extends JFrame
 		
 		menuItem.addActionListener(this::onClickDatabaseSeeAll);
 		menu.add(menuItem);
+
+		menuItem = new JMenuItem("Restart blockchain");
+		menuItem.addActionListener(this::onClickDatabaseRestart);
+		menu.add(menuItem);
 		
 		menuItem = new JMenuItem("Delete all records");
 		menuItem.addActionListener(this::onClickDatabaseDelete);
@@ -97,12 +101,25 @@ public class VentanaPrincipal extends JFrame
 	public void onClickDatabaseDelete (ActionEvent e) {
 		try {
 			getAdmin().eliminarTodosLosRegistros();
-			showMessage("Base de datos Truncada!");
+			showMessage("Truncated database");
 			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}
+	
+	public void onClickDatabaseRestart (ActionEvent e) {
+		try {
+			getAdmin().eliminarTodosLosRegistros();
+			getAdmin().reiniciarBlockchain();
+			showMessage("Database restarted");
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	
 	public void onClickMenuUpload(ActionEvent e) {
 		leerFichero();
 	}
@@ -127,7 +144,7 @@ public class VentanaPrincipal extends JFrame
                 showMessage(getAdmin().validarArchivo(archivo));
                 
 			}else {
-                showMessage("El archivo no existe");
+                showMessage("The file doesn't exist");
             }
 		}catch (Exception ex) {
             

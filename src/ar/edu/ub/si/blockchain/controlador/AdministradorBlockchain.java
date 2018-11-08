@@ -1,5 +1,6 @@
 package ar.edu.ub.si.blockchain.controlador;
 import java.io.File;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -24,8 +25,22 @@ public class AdministradorBlockchain extends Administrador {
 	
 	public AdministradorBlockchain(String configuration) {
 		super(configuration);
+		actualizarBackup();
 	}
 	
+	private void actualizarBackup() {
+		
+		try {
+			if(esBlockchainValida())
+				Backup.guardar(getBloques());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	@Override
 	public void crearDato(File archivo) {	
 		setDato(new Dato(archivo));	
@@ -78,7 +93,7 @@ public class AdministradorBlockchain extends Administrador {
 	}
 	
 	@Override
-	public void almacenarBloque(Bloque blockChain) throws Exception {
+	public void almacenarBloque(Bloque bloque) throws Exception {
 		
 		//ARMAR UN INSERT
 		String insercion = "INSERT INTO [Blockchain].[dbo].[Hash] "
@@ -86,10 +101,10 @@ public class AdministradorBlockchain extends Administrador {
 							+ "VALUES (?,?,?,?)";
 		// preparo la insercion
 		PreparedStatement ps = connection().prepareStatement(insercion, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, blockChain.getHash());
-		ps.setString(2, blockChain.getHashDato());
-		ps.setString(3, blockChain.getPreviousHash());
-		ps.setString(4, blockChain.getTimeStampStr());
+		ps.setString(1, bloque.getHash());
+		ps.setString(2, bloque.getHashDato());
+		ps.setString(3, bloque.getPreviousHash());
+		ps.setString(4, bloque.getTimeStampStr());
 		
 		ps.execute();
 		
@@ -213,7 +228,7 @@ public class AdministradorBlockchain extends Administrador {
 	public String validarArchivo(File archivo) throws Exception {
 		
 		
-		if(validarBlockChain()) {
+		if(esBlockchainValida()) {
 			
 		
 		crearDato(archivo);
@@ -226,13 +241,14 @@ public class AdministradorBlockchain extends Administrador {
 				    almacenarBloque(new Bloque(getBlockchainLocal().get(getBlockchainLocal().size()-1).getHash(), dato.getHash()) );
 				    insertarUltimoHashRoot();
 			}
-			return "Archivo Valido!";
+			actualizarBackup();
+			return "Valid File";
 		}else {
-			return "Archivo invalido: el archivo ya se encuentra en la blockchain";
+			return "Invalid File: the file is already in the blockchain";
 			
 		}
 	}else {
-		return "BlockChain Corrupta! . Reinicie la blockchain.";
+		return "Corrupt blockchain, restart it";
 	}
 	}
 
@@ -241,52 +257,52 @@ public class AdministradorBlockchain extends Administrador {
 		
 		// Defino la conexion
 				
-					String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
-					Statement stmtConsulta = connection().createStatement();
-					ResultSet rs = stmtConsulta.executeQuery(laConsulta);
+		String laConsulta = "SELECT * FROM [Blockchain].[dbo].[Hash]";
+		Statement stmtConsulta = connection().createStatement();
+		ResultSet rs = stmtConsulta.executeQuery(laConsulta);
 
-					
-					// Armo el array de bloques
-					
-					ArrayList<Bloque> bloques = new ArrayList<Bloque>();
-					
-					// muestro los datos
-					
-					while (rs.next()) {
-						
-						// armo el bloque con los datos obtenidos
-						Bloque bl = new Bloque();
-						bl.setHash(rs.getString("Hash"));
-						bl.setHashDato(rs.getString("HashDato"));
-						bl.setPreviousHash(rs.getString("PreviusHash"));
-						bl.setTsbd(rs.getString("TimeStamp"));
-						
-						// agrego el bloque al array
-						bloques.add(bl);
-						
-					}
-					
-					// cierro el statement
-					stmtConsulta.close();
-					System.out.println("holis");
-					Backup.guardar(bloques);
-				return bloques;
+		
+		// Armo el array de bloques
+		
+		ArrayList<Bloque> bloques = new ArrayList<Bloque>();
+		
+		// muestro los datos
+		
+		while (rs.next()) {
+			
+			// armo el bloque con los datos obtenidos
+			Bloque bl = new Bloque();
+			bl.setHash(rs.getString("Hash"));
+			bl.setHashDato(rs.getString("HashDato"));
+			bl.setPreviousHash(rs.getString("PreviusHash"));
+			bl.setTsbd(rs.getString("TimeStamp"));
+			
+			// agrego el bloque al array
+			bloques.add(bl);
+			
+		}
+		
+		// cierro el statement
+		stmtConsulta.close();
+		return bloques;
 	}
 	
-	public boolean validarBlockChain() throws Exception{
+	
+	
+	public boolean esBlockchainValida() throws Exception{
 		this.setBlockchainLocal(getBlockchain());
 		
 		if (blockchainLocal.isEmpty()) {
 			return true;
 		}else {
 		
-		actualizarRootLocal();
-		
-		if(getUltimoHashRootBD().equals(this.getRootHash())) {
-			return true;
-		}else {
-			return false;			
-		}
+			actualizarRootLocal();
+			
+			if(getUltimoHashRootBD().equals(this.getRootHash())) {
+				return true;
+			}else {
+				return false;			
+			}
 		}
 	}
 	public ArrayList<Bloque> getBlockchainLocal() {
@@ -304,5 +320,15 @@ public class AdministradorBlockchain extends Administrador {
 
 	public void setRootHash(String rootHash) {
 		this.rootHash = rootHash;
+	}
+
+	@Override
+	public void reiniciarBlockchain() throws Exception {
+		
+		ArrayList<Bloque> bloques = Backup.cargar();
+		
+		for (Bloque bloque: bloques)
+			almacenarBloque(bloque);
+		
 	}
 }

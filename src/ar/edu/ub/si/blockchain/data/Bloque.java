@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import ar.edu.ub.si.blockchain.interfaces.IOperacionesHash;
 
 public class Bloque implements IOperacionesHash{
@@ -33,7 +35,7 @@ public class Bloque implements IOperacionesHash{
 	
 	public String toString() {
 		
-		return getHash() +","+ getHashDato() +","+ getPreviousHash() +","+ getTsbd() ;
+		return getHash() +","+ getHashDato() +","+ getPreviousHash() +","+ getTsbd()+"," ;
 		
 	}
 
@@ -44,9 +46,6 @@ public class Bloque implements IOperacionesHash{
 		this.setPreviousHash(null);
 		this.setTsbd(null);
 	}
-
-
-
 
 	public Date generarTimeStamp() {
 		return new Date();

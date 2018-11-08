@@ -29,6 +29,8 @@ public class Backup implements Serializable {
         	bw.write(bloque.toString() +"\n");
         bw.close();	
         
+        System.out.println("Blockchain actualizada");
+        
 	}
 	
 	
