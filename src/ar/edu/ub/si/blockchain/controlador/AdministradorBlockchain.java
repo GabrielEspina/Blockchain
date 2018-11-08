@@ -1,17 +1,15 @@
 package ar.edu.ub.si.blockchain.controlador;
 import java.io.File;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.ub.si.blockchain.config.ConectorBaseDeDatos;
+import ar.edu.ub.si.blockchain.backup.Backup;
 import ar.edu.ub.si.blockchain.data.Bloque;
 import ar.edu.ub.si.blockchain.data.Dato;
 import ar.edu.ub.si.blockchain.data.MerkleTree;
-import ar.edu.ub.si.blockchain.util.Configuracion;
 
 	
 
@@ -74,6 +72,7 @@ public class AdministradorBlockchain extends Administrador {
 		
 		// cierro el statement
 		stmtConsulta.close();
+		
 		
 		return bloques;
 	}
@@ -269,7 +268,8 @@ public class AdministradorBlockchain extends Administrador {
 					
 					// cierro el statement
 					stmtConsulta.close();
-				
+					System.out.println("holis");
+					Backup.guardar(bloques);
 				return bloques;
 	}
 	

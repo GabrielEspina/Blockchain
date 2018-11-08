@@ -54,13 +54,16 @@ public class VentanaPrincipal extends JFrame
 
 	private JMenu createMenuBd() {
 		JMenu menu = new JMenu("DataBase");
-		JMenuItem menuItem = new JMenuItem("Delete all records");
+		JMenuItem menuItem = new JMenuItem("See all records");
+		
+		menuItem.addActionListener(this::onClickDatabaseSeeAll);
+		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Delete all records");
 		menuItem.addActionListener(this::onClickDatabaseDelete);
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("See all records");
-		menuItem.addActionListener(this::onClickDatabaseSeeAll);
-		menu.add(menuItem);
+		
 		
 		return menu;
 	}
@@ -85,7 +88,6 @@ public class VentanaPrincipal extends JFrame
                 try {
 					new EjemploDeTabla(admin);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             }
@@ -98,7 +100,6 @@ public class VentanaPrincipal extends JFrame
 			showMessage("Base de datos Truncada!");
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

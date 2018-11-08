@@ -30,6 +30,12 @@ public class Bloque implements IOperacionesHash{
 		generarHash();
 		
 	}
+	
+	public String toString() {
+		
+		return getHash() +","+ getHashDato() +","+ getPreviousHash() +","+ getTsbd() ;
+		
+	}
 
 
 	public Bloque() {
