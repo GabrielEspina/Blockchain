@@ -32,7 +32,8 @@ public class AdministradorBlockchain extends Administrador {
 		
 		try {
 			if(esBlockchainValida())
-				Backup.guardar(getBloques());
+				this.setBlockchainLocal(getBlockchain());
+				Backup.guardar(getBlockchainLocal());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -329,6 +330,7 @@ public class AdministradorBlockchain extends Administrador {
 		
 		for (Bloque bloque: bloques)
 			almacenarBloque(bloque);
+		insertarUltimoHashRoot();
 		
 	}
 }

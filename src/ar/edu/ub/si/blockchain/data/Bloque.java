@@ -35,7 +35,7 @@ public class Bloque implements IOperacionesHash{
 	
 	public String toString() {
 		
-		return getHash() +","+ getHashDato() +","+ getPreviousHash() +","+ getTsbd()+"," ;
+		return getHash() +","+ getHashDato() +","+ getPreviousHash() +","+ getTimeStampStr()+"," ;
 		
 	}
 

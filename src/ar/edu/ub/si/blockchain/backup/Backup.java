@@ -53,7 +53,7 @@ public class Backup implements Serializable {
 			bloque.setHash(arraycadena[0]);
 			bloque.setHashDato(arraycadena[1]);
 			bloque.setPreviousHash(arraycadena[2]);
-			bloque.setTsbd(arraycadena[3]);
+			bloque.setTimeStampStr(arraycadena[3]);
 			
 			bloques.add(bloque);
 			
